@@ -1,4 +1,4 @@
-CREATE VIEW student_progressions AS 
+CREATE VIEW student_progressions AS  
 SELECT 
     --   [RECTYPE]
     --  ,[LEA]
