@@ -1,21 +1,21 @@
-CREATE VIEW school_information AS 
+CREATE VIEW school_information_updated AS 
 
 SELECT 
        [URN]
-      ,[LANAME]
+      ,[LANAME] AS Location
     --  ,[LA]
     --  ,[ESTAB]
     --  ,[LAESTAB]
-      ,[SCHNAME]
+      ,[SCHNAME] AS School
     --  ,[STREET]
     --  ,[LOCALITY]
     --  ,[ADDRESS3]
-      ,[TOWN]
-      ,[POSTCODE]
+      ,[TOWN] AS Town
+      ,[POSTCODE] AS Post_code
 --      ,[SCHSTATUS]
     --  ,[CLOSEDATE]
-      ,[MINORGROUP]
-      ,[SCHOOLTYPE]
+      ,[MINORGROUP] AS Other_grouping
+      ,[SCHOOLTYPE] AS School_type
     --  ,[ISPRIMARY]
     --  ,[ISSECONDARY]
     --  ,[ISPOST16]
@@ -25,20 +25,20 @@ SELECT
         WHEN AGEHIGH >=17 AND AGEHIGH <=19 THEN '17-19'
         WHEN AGEHIGH >=20 AND AGEHIGH <=25 THEN '20-25'
         WHEN AGEHIGH >25 THEN 'MATURE'
-        END AS age_grouping
-      ,[GENDER]
+        END AS Age_grouping
+      ,[GENDER] AS Gender
     --  ,[RELCHAR]
       ,CASE 
         WHEN RELCHAR = 'Does not apply' THEN NULL
         WHEN RELCHAR = 'None' THEN NULL
         ELSE RELCHAR
-        END AS associated_with
-      ,[ADMPOL]
+        END AS Associated_with
+      --,[ADMPOL]
       ,CASE 
         WHEN ADMPOL = 'Not applicable' THEN NULL
         ELSE ADMPOL
-        END AS admin_policy
-      ,[OFSTEDRATING]
-      ,[OFSTEDLASTINSP]
+        END AS Admission_policy
+      ,[OFSTEDRATING] AS OFTSTED_rating
+      ,[OFSTEDLASTINSP] AS OFSTED_visit
   FROM [a_levels_study_db].[dbo].[s_england_school_information]
-  WHERE ISPOST16 != 0 AND AGEHIGH !=99 AND CLOSEDATE IS NULL
+  WHERE ISPOST16 != 0 AND CLOSEDATE IS NULL
