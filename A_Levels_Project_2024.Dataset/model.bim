@@ -762,6 +762,25 @@
             "lineageTag": "be587b7d-4687-4e96-85ef-9fb2257c7122",
             "sourceColumn": "A_level_computer_sciences_percent_male",
             "summarizeBy": "sum"
+          },
+          {
+            "name": "Science Enrolments (avg)",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "expression": "(math_science[A_level_maths_percent_all]+math_science[A_level_physics_percent_all]+math_science[A_level_chemistry_percent_all]+math_science[A_level_biological_sciences_percent_all])/4",
+            "isDataTypeInferred": true,
+            "lineageTag": "bfb71e77-11da-4b4a-aff6-e8637f4d1ae2",
+            "summarizeBy": "sum",
+            "type": "calculated"
           }
         ],
         "lineageTag": "6fc9f543-bdca-44ca-9b27-f1e2b54b5d24",
@@ -1231,7 +1250,7 @@
             "summarizeBy": "none"
           },
           {
-            "name": "OFTSTED_rating",
+            "name": "OFTSTED rating",
             "annotations": [
               {
                 "name": "SummarizationSetBy",
@@ -1240,7 +1259,7 @@
             ],
             "dataType": "string",
             "lineageTag": "ca440636-30d7-413e-a445-8282454d9692",
-            "sourceColumn": "OFTSTED_rating",
+            "sourceColumn": "OFTSTED rating",
             "summarizeBy": "none"
           },
           {
@@ -1284,9 +1303,10 @@
                 "    Source = Sql.Databases(\"localhost\\SQLEXPRESS\"),",
                 "    a_levels_study_db = Source{[Name=\"a_levels_study_db\"]}[Data],",
                 "    dbo_school_information_updated = a_levels_study_db{[Schema=\"dbo\",Item=\"school_information_updated\"]}[Data],",
-                "    #\"Changed Type\" = Table.TransformColumnTypes(dbo_school_information_updated,{{\"OFSTED_visit\", type date}})",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(dbo_school_information_updated,{{\"OFSTED_visit\", type date}}),",
+                "    #\"Renamed Columns\" = Table.RenameColumns(#\"Changed Type\",{{\"OFTSTED_rating\", \"OFTSTED rating\"}})",
                 "in",
-                "    #\"Changed Type\""
+                "    #\"Renamed Columns\""
               ],
               "type": "m"
             }
