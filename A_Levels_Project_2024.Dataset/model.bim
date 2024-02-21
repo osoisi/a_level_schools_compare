@@ -1,0 +1,1504 @@
+{
+  "compatibilityLevel": 1550,
+  "model": {
+    "annotations": [
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"city_region_entries\",\"math_science\",\"regional_info\",\"student_progressions\",\"school_information_updated\"]"
+      },
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "1"
+      },
+      {
+        "name": "PBIDesktopVersion",
+        "value": "2.126.927.0 (24.02)"
+      },
+      {
+        "name": "PBI_ProTooling",
+        "value": "[\"DevMode\"]"
+      }
+    ],
+    "culture": "en-GB",
+    "cultures": [
+      {
+        "name": "en-GB",
+        "linguisticMetadata": {
+          "content": {
+            "DynamicImprovement": "HighConfidence",
+            "Language": "en-US",
+            "Version": "1.0.0"
+          },
+          "contentType": "json"
+        }
+      }
+    ],
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "relationships": [
+      {
+        "name": "2a7f3b4f-ff14-4e32-a1de-2dbe88b380c4",
+        "fromColumn": "Region_name",
+        "fromTable": "city_region_entries",
+        "toColumn": "Region_name",
+        "toTable": "regional_info"
+      },
+      {
+        "name": "2d8cf6dd-b29b-42f7-b391-255377591f8d",
+        "fromColumn": "OFSTED_visit",
+        "fromTable": "school_information_updated",
+        "joinOnDateBehavior": "datePartOnly",
+        "toColumn": "Date",
+        "toTable": "LocalDateTable_deac3325-5d72-4157-a6a0-d97ca2f713a2"
+      },
+      {
+        "name": "7758bc4e-eb0e-42f7-b661-053fd0681dc0",
+        "fromColumn": "Location",
+        "fromTable": "school_information_updated",
+        "toColumn": "Location",
+        "toTable": "city_region_entries"
+      },
+      {
+        "name": "1e21f8c4-a1ed-48d5-a41c-5949ebf01bdd",
+        "crossFilteringBehavior": "bothDirections",
+        "fromCardinality": "one",
+        "fromColumn": "URN",
+        "fromTable": "school_information_updated",
+        "toColumn": "URN",
+        "toTable": "student_progressions"
+      },
+      {
+        "name": "a7c5aa0d-60e1-4835-87bb-fef26feafaca",
+        "fromColumn": "URN",
+        "fromTable": "math_science",
+        "toColumn": "URN",
+        "toTable": "school_information_updated"
+      }
+    ],
+    "sourceQueryCulture": "en-GB",
+    "tables": [
+      {
+        "name": "city_region_entries",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Region_name",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "ac584ff5-6986-4d76-afb6-eb45db38afa8",
+            "sourceColumn": "Region_name",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Location",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "04c7a6b2-4004-46e3-9ef6-c8814575c666",
+            "sourceColumn": "Location",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "entry_count",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "ae11293e-4fb7-4b26-a61a-b530e3515f58",
+            "sourceColumn": "entry_count",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "entry_per_region",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "5d3a4c00-9f88-494b-b468-825626a6e32c",
+            "sourceColumn": "entry_per_region",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "total_entries",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "1bac72e2-c0b3-4476-8360-02add21ed00e",
+            "sourceColumn": "total_entries",
+            "summarizeBy": "sum"
+          }
+        ],
+        "lineageTag": "cb437bc8-3d6c-4503-890e-b887e643d6d4",
+        "partitions": [
+          {
+            "name": "city_region_entries",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Sql.Databases(\"localhost\\SQLEXPRESS\"),",
+                "    a_levels_study_db = Source{[Name=\"a_levels_study_db\"]}[Data],",
+                "    dbo_city_region_entries = a_levels_study_db{[Schema=\"dbo\",Item=\"city_region_entries\"]}[Data],",
+                "    #\"Renamed Columns\" = Table.RenameColumns(dbo_city_region_entries,{{\"la_name\", \"Location\"}, {\"region_name\", \"Region_name\"}})",
+                "in",
+                "    #\"Renamed Columns\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "DateTableTemplate_d55f1841-4819-43eb-9422-a787745f4f1d",
+        "annotations": [
+          {
+            "name": "__PBI_TemplateDateTable",
+            "value": "true"
+          },
+          {
+            "name": "DefaultItem",
+            "value": "DateHierarchy"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataCategory": "PaddedDateTableDates",
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "isHidden": true,
+            "isNameInferred": true,
+            "lineageTag": "f425b75b-57f1-453c-94ce-3d112a2067b6",
+            "sourceColumn": "[Date]",
+            "summarizeBy": "none",
+            "type": "calculatedTableColumn"
+          },
+          {
+            "name": "Year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Year"
+              }
+            ],
+            "dataCategory": "Years",
+            "dataType": "int64",
+            "expression": "YEAR([Date])",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "321c37c9-ea70-435f-b21f-0eb589c23774",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "MonthNo",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "MonthNumber"
+              }
+            ],
+            "dataCategory": "MonthOfYear",
+            "dataType": "int64",
+            "expression": "MONTH([Date])",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "69c6acf4-def1-4fec-b3aa-f89e2d6a9080",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Month",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Month"
+              }
+            ],
+            "dataCategory": "Months",
+            "dataType": "string",
+            "expression": "FORMAT([Date], \"MMMM\")",
+            "isHidden": true,
+            "lineageTag": "1ec9db8c-a75a-41f9-b771-d9bdcfebfb38",
+            "sortByColumn": "MonthNo",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "QuarterNo",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "QuarterNumber"
+              }
+            ],
+            "dataCategory": "QuarterOfYear",
+            "dataType": "int64",
+            "expression": "INT(([MonthNo] + 2) / 3)",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "0a7b0136-fa82-4d6e-a3b3-87e0636ae9ab",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Quarter",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Quarter"
+              }
+            ],
+            "dataCategory": "Quarters",
+            "dataType": "string",
+            "expression": "\"Qtr \" & [QuarterNo]",
+            "isHidden": true,
+            "lineageTag": "cd21981d-2029-426b-adb9-3e3f88615843",
+            "sortByColumn": "QuarterNo",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Day",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Day"
+              }
+            ],
+            "dataCategory": "DayOfMonth",
+            "dataType": "int64",
+            "expression": "DAY([Date])",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "c878da1a-3b3d-4f74-b06d-6861cd7b57d1",
+            "summarizeBy": "none",
+            "type": "calculated"
+          }
+        ],
+        "hierarchies": [
+          {
+            "name": "Date Hierarchy",
+            "annotations": [
+              {
+                "name": "TemplateId",
+                "value": "DateHierarchy"
+              }
+            ],
+            "levels": [
+              {
+                "name": "Year",
+                "column": "Year",
+                "lineageTag": "a783d76d-b2d2-4896-a6bc-fbe8a28e6c4a",
+                "ordinal": 0
+              },
+              {
+                "name": "Quarter",
+                "column": "Quarter",
+                "lineageTag": "4c99b3bf-a423-47f3-b525-54011934350a",
+                "ordinal": 1
+              },
+              {
+                "name": "Month",
+                "column": "Month",
+                "lineageTag": "7e0cbea8-29ed-415a-ad53-517db3af9b57",
+                "ordinal": 2
+              },
+              {
+                "name": "Day",
+                "column": "Day",
+                "lineageTag": "720f2aba-45c6-4be7-90c5-aa479ab47e30",
+                "ordinal": 3
+              }
+            ],
+            "lineageTag": "52fb01d7-fb18-423b-bf8a-96421055bade"
+          }
+        ],
+        "isHidden": true,
+        "isPrivate": true,
+        "lineageTag": "4054dac0-ab46-4345-b7f3-b8cf2a8287a3",
+        "partitions": [
+          {
+            "name": "DateTableTemplate_d55f1841-4819-43eb-9422-a787745f4f1d",
+            "mode": "import",
+            "source": {
+              "expression": "Calendar(Date(2015,1,1), Date(2015,1,1))",
+              "type": "calculated"
+            }
+          }
+        ]
+      },
+      {
+        "name": "math_science",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "URN",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "e7447441-d386-4e00-b13c-d2652e56f241",
+            "sourceColumn": "URN",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "All_A_levels_students",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "f498a48d-6770-49fe-901f-add14a9dd9f2",
+            "sourceColumn": "All_A_levels_students",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "A_level_maths_percent_all",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "3832a469-0048-45f4-9545-3072927622e1",
+            "sourceColumn": "A_level_maths_percent_all",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "A_level_further_maths_percent_all",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "31f0ae31-d54a-44fd-9b34-f45e6bb8d686",
+            "sourceColumn": "A_level_further_maths_percent_all",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "A_level_biological_sciences_percent_all",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "4942a04a-635d-4bcd-8291-8aac7a1a49de",
+            "sourceColumn": "A_level_biological_sciences_percent_all",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "A_level_chemistry_percent_all",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "e25cd3e1-c52b-4662-b2a4-a8ff64193b9c",
+            "sourceColumn": "A_level_chemistry_percent_all",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "A_level_physics_percent_all",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "8fbe89f1-ee02-4960-9770-28436675cc86",
+            "sourceColumn": "A_level_physics_percent_all",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "A_level_computer_sciences_percent_all",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "827a86e4-5736-4cca-86f8-601f6f94f8a9",
+            "sourceColumn": "A_level_computer_sciences_percent_all",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Female_A_levels_students",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "c3acb11f-1ef5-498d-aa2c-d9b58b385cce",
+            "sourceColumn": "Female_A_levels_students",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "A_level_maths_percent_female",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "a04085d5-0ec0-4199-8cf7-7285fa00fb2e",
+            "sourceColumn": "A_level_maths_percent_female",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "A_level_further_maths_percent_female",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "687e6391-c428-45b5-874f-c4a38cda9af9",
+            "sourceColumn": "A_level_further_maths_percent_female",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "A_level_biological_sciences_percent_female",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "437ff350-a030-41a5-a714-539ef714c494",
+            "sourceColumn": "A_level_biological_sciences_percent_female",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "A_level_chemistry_percent_female",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "b5071256-1931-4857-a37c-b50945cd9c9b",
+            "sourceColumn": "A_level_chemistry_percent_female",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "A_level_physics_percent_female",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "2ff89a54-f330-4b28-8a83-765a0f4b501e",
+            "sourceColumn": "A_level_physics_percent_female",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "A_level_computer_sciences_percent_female",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "3793dad4-a4b2-4da9-850e-5f185dcd5f27",
+            "sourceColumn": "A_level_computer_sciences_percent_female",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Male_A_levels_students",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "6e821af1-4d78-455a-babc-904ee01e92b9",
+            "sourceColumn": "Male_A_levels_students",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "A_level_Maths_percent_male",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "6fffe162-e8bb-4856-8c19-dc567e383c5e",
+            "sourceColumn": "A_level_Maths_percent_male",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "A_level_further_maths_percent_male",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "ab0ab364-47d7-4705-9842-51b948916570",
+            "sourceColumn": "A_level_further_maths_percent_male",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "A_level_biological_sciences_percent_male",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "a78d1c64-06a5-4829-b123-de2322cf1182",
+            "sourceColumn": "A_level_biological_sciences_percent_male",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "A_level_chemistry_percent_male",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "e74210c0-5985-4430-83a7-cd0cb3ecc663",
+            "sourceColumn": "A_level_chemistry_percent_male",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "A_level_physics_percent_male",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "b08007e8-b8ba-40e0-be82-a719c4343654",
+            "sourceColumn": "A_level_physics_percent_male",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "A_level_computer_sciences_percent_male",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "be587b7d-4687-4e96-85ef-9fb2257c7122",
+            "sourceColumn": "A_level_computer_sciences_percent_male",
+            "summarizeBy": "sum"
+          }
+        ],
+        "lineageTag": "6fc9f543-bdca-44ca-9b27-f1e2b54b5d24",
+        "partitions": [
+          {
+            "name": "math_science",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Sql.Databases(\"localhost\\SQLEXPRESS\"),",
+                "    a_levels_study_db = Source{[Name=\"a_levels_study_db\"]}[Data],",
+                "    dbo_math_science = a_levels_study_db{[Schema=\"dbo\",Item=\"math_science\"]}[Data]",
+                "in",
+                "    dbo_math_science"
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "regional_info",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Region_name",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "d973146b-b8a3-4edf-8147-76e39171f5b8",
+            "sourceColumn": "Region_name",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Qualification",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "794b5114-3bd7-45e2-91e2-86eb6123beb5",
+            "sourceColumn": "Qualification",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Entry_count",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "cccb92b4-c7d6-4bd2-bbc6-015f9cc4ae3d",
+            "sourceColumn": "Entry_count",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "44c74798-d662-4fcf-bf3c-67dbc4eb0bb6",
+        "partitions": [
+          {
+            "name": "regional_info",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Sql.Databases(\"localhost\\SQLEXPRESS\"),",
+                "    a_levels_study_db = Source{[Name=\"a_levels_study_db\"]}[Data],",
+                "    dbo_regional_info = a_levels_study_db{[Schema=\"dbo\",Item=\"regional_info\"]}[Data],",
+                "    #\"Renamed Columns\" = Table.RenameColumns(dbo_regional_info,{{\"region_name\", \"Region_name\"}, {\"qualification\", \"Qualification\"}, {\"entry_count\", \"Entry_count\"}, {\"geographic_level\", \"Geographic_level\"}}),",
+                "    #\"Removed Columns\" = Table.RemoveColumns(#\"Renamed Columns\",{\"Geographic_level\"})",
+                "in",
+                "    #\"Removed Columns\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "student_progressions",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "URN",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "9ce02015-9238-449b-bf6f-04f69a2f10fc",
+            "sourceColumn": "URN",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Studying for level 3 qualification",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "c0e861d3-281b-403b-af05-ec334fececf5",
+            "sourceColumn": "Studying for level 3 qualification",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Sustained L4 or above",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "216f7edb-9624-4c2d-a69a-15390ab67314",
+            "sourceColumn": "Sustained L4 or above",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Sustained App'ship",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "e428ddbf-8367-4577-9234-15be168cc25e",
+            "sourceColumn": "Sustained App'ship",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "All Higher Education",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "9296695a-5924-408d-afa9-a01d0ace4f5b",
+            "sourceColumn": "All Higher Education",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Top-Third Higher Education",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "4cdb90db-7cb4-4dab-ba93-6b5d179da658",
+            "sourceColumn": "Top-Third Higher Education",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "To Russell Group Institution",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "7fdabc11-dc41-4b2c-a911-7a650918594d",
+            "sourceColumn": "To Russell Group Institution",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "To Oxford or Cambridge",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "e754e468-4b25-4a29-a08f-05c9566a973a",
+            "sourceColumn": "To Oxford or Cambridge",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Sustained Level 4 or 5",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "lineageTag": "eb1379c5-1e57-4f14-9d98-0812452fa379",
+            "sourceColumn": "Sustained Level 4 or 5",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Performance (avg)",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataType": "double",
+            "expression": "(student_progressions[Sustained App'ship]+student_progressions[Top-Third Higher Education]+student_progressions[To Russell Group Institution]+student_progressions[To Oxford or Cambridge])/4",
+            "isDataTypeInferred": true,
+            "lineageTag": "48208f3c-d91e-4374-810e-44fbf97c3ad7",
+            "summarizeBy": "none",
+            "type": "calculated"
+          }
+        ],
+        "lineageTag": "6f74050b-59a8-444e-8324-6473948d5324",
+        "partitions": [
+          {
+            "name": "student_progressions",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Sql.Databases(\"localhost\\SQLEXPRESS\"),",
+                "    a_levels_study_db = Source{[Name=\"a_levels_study_db\"]}[Data],",
+                "    dbo_student_progressions = a_levels_study_db{[Schema=\"dbo\",Item=\"student_progressions\"]}[Data],",
+                "    #\"Renamed Columns\" = Table.RenameColumns(dbo_student_progressions,{{\"studying4level3qual\", \"Studying for level 3 qualification\"}, {\"sustainedL4above\", \"sustained L4 or above\"}, {\"SustainedApprenticeshipDestination\", \"Sustained App'ship\"}, {\"ALL_HE\", \"ALL_Higher_Education\"}, {\"TopthirdHEdestination\", \"Top third Higher Education\"}, {\"RussellGroupInstitution\", \"To Russell Group Institution\"}, {\"OxfordorCambridge\", \"To Oxford or Cambridge\"}, {\"SustainedLevel4or5destination\", \"Sustained Level 4 or 5\"}}),",
+                "    #\"Filtered Rows\" = Table.SelectRows(#\"Renamed Columns\", each [To Russell Group Institution] <> null and [To Russell Group Institution] <> \"\"),",
+                "    #\"Replaced Value\" = Table.ReplaceValue(#\"Filtered Rows\",\"SP\",\"NULL\",Replacer.ReplaceText,{\"To Oxford or Cambridge\"}),",
+                "    #\"Replaced Value1\" = Table.ReplaceValue(#\"Replaced Value\",\"SUPP\",\"\",Replacer.ReplaceText,{\"To Oxford or Cambridge\"}),",
+                "    #\"Replaced Value2\" = Table.ReplaceValue(#\"Replaced Value1\",\"SP\",\"\",Replacer.ReplaceText,{\"To Russell Group Institution\"}),",
+                "    #\"Replaced Value3\" = Table.ReplaceValue(#\"Replaced Value2\",\"SUPP\",\"\",Replacer.ReplaceText,{\"To Russell Group Institution\"}),",
+                "    #\"Replaced Value4\" = Table.ReplaceValue(#\"Replaced Value3\",\"SP\",\"\",Replacer.ReplaceText,{\"Sustained Level 4 or 5\"}),",
+                "    #\"Replaced Value5\" = Table.ReplaceValue(#\"Replaced Value4\",\"SUPP\",\"\",Replacer.ReplaceText,{\"Sustained Level 4 or 5\"}),",
+                "    #\"Replaced Value6\" = Table.ReplaceValue(#\"Replaced Value5\",\"SP\",\"\",Replacer.ReplaceText,{\"Top third Higher Education\"}),",
+                "    #\"Replaced Value7\" = Table.ReplaceValue(#\"Replaced Value6\",\"SUPP\",\"\",Replacer.ReplaceText,{\"Top third Higher Education\"}),",
+                "    #\"Replaced Value8\" = Table.ReplaceValue(#\"Replaced Value7\",\"SUPP\",\"\",Replacer.ReplaceText,{\"ALL_Higher_Education\"}),",
+                "    #\"Replaced Value9\" = Table.ReplaceValue(#\"Replaced Value8\",\"SP\",\"\",Replacer.ReplaceText,{\"Sustained App'ship\"}),",
+                "    #\"Replaced Value10\" = Table.ReplaceValue(#\"Replaced Value9\",\"SUPP\",\"\",Replacer.ReplaceText,{\"Sustained App'ship\"}),",
+                "    #\"Replaced Value11\" = Table.ReplaceValue(#\"Replaced Value10\",\"SUPP\",\"\",Replacer.ReplaceText,{\"sustained L4 or above\"}),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Replaced Value11\",{{\"sustained L4 or above\", Percentage.Type}, {\"Sustained App'ship\", Percentage.Type}, {\"Studying for level 3 qualification\", Int64.Type}, {\"ALL_Higher_Education\", Percentage.Type}, {\"Top third Higher Education\", Percentage.Type}, {\"To Russell Group Institution\", Percentage.Type}, {\"To Oxford or Cambridge\", Percentage.Type}, {\"Sustained Level 4 or 5\", Percentage.Type}}),",
+                "    #\"Added Index\" = Table.AddIndexColumn(#\"Changed Type\", \"Index\", 0, 1, Int64.Type),",
+                "    #\"Reordered Columns\" = Table.ReorderColumns(#\"Added Index\",{\"Index\", \"URN\", \"Studying for level 3 qualification\", \"sustained L4 or above\", \"Sustained App'ship\", \"ALL_Higher_Education\", \"Top third Higher Education\", \"To Russell Group Institution\", \"To Oxford or Cambridge\", \"Sustained Level 4 or 5\"}),",
+                "    #\"Renamed Columns1\" = Table.RenameColumns(#\"Reordered Columns\",{{\"sustained L4 or above\", \"Sustained L4 or above\"}}),",
+                "    #\"Removed Columns\" = Table.RemoveColumns(#\"Renamed Columns1\",{\"Index\"}),",
+                "    #\"Renamed Columns2\" = Table.RenameColumns(#\"Removed Columns\",{{\"ALL_Higher_Education\", \"All Higher Education\"}, {\"Top third Higher Education\", \"Top-Third Higher Education\"}})",
+                "in",
+                "    #\"Renamed Columns2\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "school_information_updated",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "URN",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "497141b4-f8a7-49d4-92c4-fd1b9a89d030",
+            "sourceColumn": "URN",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Location",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "563d4abc-0c84-4f98-9cde-c8a643cddea5",
+            "sourceColumn": "Location",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "School",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "043c2d40-2362-4a89-993f-89321c290f98",
+            "sourceColumn": "School",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Town",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "af5acc5c-0977-4e44-bf3d-e7804269271b",
+            "sourceColumn": "Town",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Post_code",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "3f6fd1ba-b092-4b5e-88e5-72fc9be2a72a",
+            "sourceColumn": "Post_code",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Other_grouping",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "7069bc54-8dc6-48a0-82c0-5324304376a8",
+            "sourceColumn": "Other_grouping",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "School_type",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "b2534601-91db-486c-8e11-b4bcbd7be545",
+            "sourceColumn": "School_type",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Age_grouping",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "0486c0a2-0c17-4ac3-a277-f549e605fd4c",
+            "sourceColumn": "Age_grouping",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Gender",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "f068f29b-b09a-406d-9987-f097e8b0e888",
+            "sourceColumn": "Gender",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Associated_with",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "218088c0-8457-450b-a804-441ab2bd497b",
+            "sourceColumn": "Associated_with",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Admission_policy",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "ff26ff7c-c753-49b3-93ae-cf549c5ef11c",
+            "sourceColumn": "Admission_policy",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "OFTSTED_rating",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "ca440636-30d7-413e-a445-8282454d9692",
+            "sourceColumn": "OFTSTED_rating",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "OFSTED_visit",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "UnderlyingDateTimeDataType",
+                "value": "Date"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "Long Date",
+            "lineageTag": "103efbec-1706-4cb6-af86-2d8fed0dc6f6",
+            "sourceColumn": "OFSTED_visit",
+            "summarizeBy": "none",
+            "variations": [
+              {
+                "name": "Variation",
+                "defaultHierarchy": {
+                  "hierarchy": "Date Hierarchy",
+                  "table": "LocalDateTable_deac3325-5d72-4157-a6a0-d97ca2f713a2"
+                },
+                "isDefault": true,
+                "relationship": "2d8cf6dd-b29b-42f7-b391-255377591f8d"
+              }
+            ]
+          }
+        ],
+        "lineageTag": "0929c45f-59eb-462c-b91f-496fe7d6757c",
+        "partitions": [
+          {
+            "name": "school_information_updated",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Sql.Databases(\"localhost\\SQLEXPRESS\"),",
+                "    a_levels_study_db = Source{[Name=\"a_levels_study_db\"]}[Data],",
+                "    dbo_school_information_updated = a_levels_study_db{[Schema=\"dbo\",Item=\"school_information_updated\"]}[Data],",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(dbo_school_information_updated,{{\"OFSTED_visit\", type date}})",
+                "in",
+                "    #\"Changed Type\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "LocalDateTable_deac3325-5d72-4157-a6a0-d97ca2f713a2",
+        "annotations": [
+          {
+            "name": "__PBI_LocalDateTable",
+            "value": "true"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataCategory": "PaddedDateTableDates",
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "isHidden": true,
+            "isNameInferred": true,
+            "lineageTag": "1dbdb62a-e858-4f5f-b161-240779fd8db6",
+            "sourceColumn": "[Date]",
+            "summarizeBy": "none",
+            "type": "calculatedTableColumn"
+          },
+          {
+            "name": "Year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Year"
+              }
+            ],
+            "dataCategory": "Years",
+            "dataType": "int64",
+            "expression": "YEAR([Date])",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "41e35bbc-7fb0-4093-bf6a-b9128c10c94d",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "MonthNo",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "MonthNumber"
+              }
+            ],
+            "dataCategory": "MonthOfYear",
+            "dataType": "int64",
+            "expression": "MONTH([Date])",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "5ea6f024-a120-4cf0-aa65-8a1f3fe6ba3d",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Month",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Month"
+              }
+            ],
+            "dataCategory": "Months",
+            "dataType": "string",
+            "expression": "FORMAT([Date], \"MMMM\")",
+            "isHidden": true,
+            "lineageTag": "5fbe7801-22f4-459e-a08c-a560ca5441e8",
+            "sortByColumn": "MonthNo",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "QuarterNo",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "QuarterNumber"
+              }
+            ],
+            "dataCategory": "QuarterOfYear",
+            "dataType": "int64",
+            "expression": "INT(([MonthNo] + 2) / 3)",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "be67de9e-851a-4361-bcb8-896d979341d5",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Quarter",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Quarter"
+              }
+            ],
+            "dataCategory": "Quarters",
+            "dataType": "string",
+            "expression": "\"Qtr \" & [QuarterNo]",
+            "isHidden": true,
+            "lineageTag": "13b3d684-9bc4-4c1d-b6ba-a0ba6ae2c8ee",
+            "sortByColumn": "QuarterNo",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Day",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Day"
+              }
+            ],
+            "dataCategory": "DayOfMonth",
+            "dataType": "int64",
+            "expression": "DAY([Date])",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "89400fe3-0597-4d4b-882b-ed5149466ea5",
+            "summarizeBy": "none",
+            "type": "calculated"
+          }
+        ],
+        "hierarchies": [
+          {
+            "name": "Date Hierarchy",
+            "annotations": [
+              {
+                "name": "TemplateId",
+                "value": "DateHierarchy"
+              }
+            ],
+            "levels": [
+              {
+                "name": "Year",
+                "column": "Year",
+                "lineageTag": "41a94e40-440a-4cc3-b940-b0370af409db",
+                "ordinal": 0
+              },
+              {
+                "name": "Quarter",
+                "column": "Quarter",
+                "lineageTag": "c5d60074-1420-41da-89a1-cfa6013b4381",
+                "ordinal": 1
+              },
+              {
+                "name": "Month",
+                "column": "Month",
+                "lineageTag": "869b30af-ea5b-4372-bb2e-802745afcae0",
+                "ordinal": 2
+              },
+              {
+                "name": "Day",
+                "column": "Day",
+                "lineageTag": "27257bfb-a824-4572-b87b-0f3588b82865",
+                "ordinal": 3
+              }
+            ],
+            "lineageTag": "0935be99-4e9d-4e2f-adca-19a28ad9fbde"
+          }
+        ],
+        "isHidden": true,
+        "lineageTag": "4533194b-ee5d-431b-a5fd-2564e3af0d61",
+        "partitions": [
+          {
+            "name": "LocalDateTable_deac3325-5d72-4157-a6a0-d97ca2f713a2",
+            "mode": "import",
+            "source": {
+              "expression": "Calendar(Date(Year(MIN('school_information_updated'[OFSTED_visit])), 1, 1), Date(Year(MAX('school_information_updated'[OFSTED_visit])), 12, 31))",
+              "type": "calculated"
+            }
+          }
+        ],
+        "showAsVariationsOnly": true
+      }
+    ]
+  }
+}
