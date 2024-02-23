@@ -773,7 +773,7 @@
             "summarizeBy": "sum"
           },
           {
-            "name": "Progression to Sciences (avg) %",
+            "name": "Progressed to Sciences (avg) %",
             "annotations": [
               {
                 "name": "SummarizationSetBy",
@@ -799,7 +799,7 @@
             "dataType": "double",
             "expression": [
               "",
-              "    VAR pts = math_science[Progression to Sciences (avg) %]",
+              "    VAR pts = math_science[Progressed to Sciences (avg) %]",
               "    VAR pts2 = RELATED(student_progressions[Students Upward Mobility])",
               "    ",
               "    VAR resultpts= (pts+pts2)/2",
@@ -1079,9 +1079,9 @@
               "    VAR sa = student_progressions[Progressed to Sustained App'ship (%)]",
               "    VAR sl4= student_progressions[Progressed to Sustained L4 or above  (%)]",
               "    VAR t3he=student_progressions[Progressed to Top-Third Higher Education (%)]",
-              "    VAR rus=student_progressions[Progressed to Russell Group Institution (%)]",
-              "    VAR oxbr=student_progressions[Progressed to Oxford or Cambridge (%)]",
-              "    VAR os = RELATED(school_information_updated[OFSTED Score %])",
+              "    VAR rus=(student_progressions[Progressed to Russell Group Institution (%)]*1.2)",
+              "    VAR oxbr=(student_progressions[Progressed to Oxford or Cambridge (%)]*1.5)",
+              "    VAR os = RELATED(school_information_updated[OFSTED Score % (Accounting for Time Since OFTSTED Visit)])",
               "    ",
               "    VAR tavg = (sa+os+sl4+t3he+rus+oxbr)/6",
               "    RETURN tavg"
@@ -1339,7 +1339,7 @@
               }
             ],
             "dataType": "int64",
-            "expression": "switch(school_information_updated[OFTSTED rating],\"Outstanding\",100,\"Good\",75,\"Requires improvement\",60,\"Inadequate\",50,0)",
+            "expression": "switch(school_information_updated[OFTSTED rating],\"Outstanding\",100,\"Good\",75,\"Requires improvement\",50,\"Inadequate\",30,0)",
             "formatString": "0",
             "isDataTypeInferred": true,
             "lineageTag": "29dec3f7-dbda-4065-b0e2-a26c973190c0",
@@ -1347,25 +1347,22 @@
             "type": "calculated"
           },
           {
-            "name": "OFSTED Score %",
+            "name": "OFSTED Score % (Accounting for Time Since OFTSTED Visit)",
             "annotations": [
               {
                 "name": "SummarizationSetBy",
                 "value": "User"
-              },
-              {
-                "name": "PBI_FormatHint",
-                "value": "{\"isGeneralNumber\":true}"
               }
             ],
             "dataType": "double",
             "expression": [
               "",
-              "    VAR s_oftscore = ((school_information_updated[OFTSTED Index]/21))",
+              "    VAR s_oftscore = ((school_information_updated[OFTSTED Index]/20))",
               "    VAR s_oftvisit = (school_information_updated[Since Oftsted Visit])",
-              "    VAR returnOftScore = (s_oftscore/(s_oftvisit))",
+              "    VAR returnOftScore = (s_oftscore/(s_oftvisit))/5",
               "    RETURN returnOftScore"
             ],
+            "formatString": "0.00%;-0.00%;0.00%",
             "isDataTypeInferred": true,
             "lineageTag": "c3303c38-e39b-4d26-849a-1fb3b426d5ef",
             "summarizeBy": "none",
