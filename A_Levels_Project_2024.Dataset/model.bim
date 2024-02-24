@@ -1198,7 +1198,7 @@
             "summarizeBy": "none"
           },
           {
-            "name": "Post_code",
+            "name": "Location (Post_code)",
             "annotations": [
               {
                 "name": "SummarizationSetBy",
@@ -1207,7 +1207,7 @@
             ],
             "dataType": "string",
             "lineageTag": "3f6fd1ba-b092-4b5e-88e5-72fc9be2a72a",
-            "sourceColumn": "Post_code",
+            "sourceColumn": "Location (Post_code)",
             "summarizeBy": "none"
           },
           {
@@ -1405,7 +1405,7 @@
                 "    a_levels_study_db = Source{[Name=\"a_levels_study_db\"]}[Data],",
                 "    dbo_school_information_updated = a_levels_study_db{[Schema=\"dbo\",Item=\"school_information_updated\"]}[Data],",
                 "    #\"Changed Type\" = Table.TransformColumnTypes(dbo_school_information_updated,{{\"OFSTED_visit\", type date}}),",
-                "    #\"Renamed Columns\" = Table.RenameColumns(#\"Changed Type\",{{\"OFTSTED_rating\", \"OFTSTED rating\"}, {\"OFSTED_visit\", \"Last OFSTED Visit\"}})",
+                "    #\"Renamed Columns\" = Table.RenameColumns(#\"Changed Type\",{{\"OFTSTED_rating\", \"OFTSTED rating\"}, {\"OFSTED_visit\", \"Last OFSTED Visit\"}, {\"Post_code\", \"Location (Post_code)\"}})",
                 "in",
                 "    #\"Renamed Columns\""
               ],
