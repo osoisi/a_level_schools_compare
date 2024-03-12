@@ -10,8 +10,8 @@
       "nodes": [
         {
           "location": {
-            "x": 895.38305001469371,
-            "y": 509.4223489799225
+            "x": 732.38305001469371,
+            "y": 476.4223489799225
           },
           "nodeIndex": "city_region_entries",
           "nodeLineageTag": "cb437bc8-3d6c-4503-890e-b887e643d6d4",
@@ -36,8 +36,8 @@
         },
         {
           "location": {
-            "x": 537.38305001469382,
-            "y": 511.4223489799225
+            "x": 1036.3830500146937,
+            "y": 191.4223489799225
           },
           "nodeIndex": "regional_info",
           "nodeLineageTag": "44c74798-d662-4fcf-bf3c-67dbc4eb0bb6",
@@ -63,7 +63,7 @@
         {
           "location": {
             "x": 304.38305001469371,
-            "y": 198
+            "y": 391
           },
           "nodeIndex": "school_information_updated",
           "nodeLineageTag": "0929c45f-59eb-462c-b91f-496fe7d6757c",

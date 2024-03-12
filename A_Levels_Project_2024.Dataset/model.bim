@@ -12,7 +12,7 @@
       },
       {
         "name": "PBIDesktopVersion",
-        "value": "2.126.927.0 (24.02)"
+        "value": "2.126.1261.0 (24.02)"
       },
       {
         "name": "PBI_ProTooling",
@@ -214,7 +214,6 @@
             ],
             "dataCategory": "PaddedDateTableDates",
             "dataType": "dateTime",
-            "formatString": "General Date",
             "isHidden": true,
             "isNameInferred": true,
             "lineageTag": "f425b75b-57f1-453c-94ce-3d112a2067b6",
@@ -237,7 +236,6 @@
             "dataCategory": "Years",
             "dataType": "int64",
             "expression": "YEAR([Date])",
-            "formatString": "0",
             "isHidden": true,
             "lineageTag": "321c37c9-ea70-435f-b21f-0eb589c23774",
             "summarizeBy": "none",
@@ -258,7 +256,6 @@
             "dataCategory": "MonthOfYear",
             "dataType": "int64",
             "expression": "MONTH([Date])",
-            "formatString": "0",
             "isHidden": true,
             "lineageTag": "69c6acf4-def1-4fec-b3aa-f89e2d6a9080",
             "summarizeBy": "none",
@@ -300,7 +297,6 @@
             "dataCategory": "QuarterOfYear",
             "dataType": "int64",
             "expression": "INT(([MonthNo] + 2) / 3)",
-            "formatString": "0",
             "isHidden": true,
             "lineageTag": "0a7b0136-fa82-4d6e-a3b3-87e0636ae9ab",
             "summarizeBy": "none",
@@ -342,7 +338,6 @@
             "dataCategory": "DayOfMonth",
             "dataType": "int64",
             "expression": "DAY([Date])",
-            "formatString": "0",
             "isHidden": true,
             "lineageTag": "c878da1a-3b3d-4f74-b06d-6861cd7b57d1",
             "summarizeBy": "none",
@@ -407,6 +402,10 @@
           {
             "name": "PBI_ResultType",
             "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
           }
         ],
         "columns": [
@@ -823,9 +822,10 @@
                 "    Source = Sql.Databases(\"localhost\\SQLEXPRESS\"),",
                 "    a_levels_study_db = Source{[Name=\"a_levels_study_db\"]}[Data],",
                 "    dbo_math_science = a_levels_study_db{[Schema=\"dbo\",Item=\"math_science\"]}[Data],",
-                "    #\"Renamed Columns\" = Table.RenameColumns(dbo_math_science,{{\"A_level_further_maths_percent_all\", \"A_level further_maths percent_all\"}, {\"A_level_physics_percent_all\", \"A_level physics percent_all\"}, {\"A_level_maths_percent_all\", \"A_level maths percent_all\"}, {\"A_level_chemistry_percent_all\", \"A_level chemistry percent_all\"}, {\"A_level_biological_sciences_percent_all\", \"A_level biological_sciences percent_all\"}, {\"A_level_computer_sciences_percent_all\", \"A_level computer sciences percent_all\"}})",
+                "    #\"Renamed Columns\" = Table.RenameColumns(dbo_math_science,{{\"A_level_further_maths_percent_all\", \"A_level further_maths percent_all\"}, {\"A_level_physics_percent_all\", \"A_level physics percent_all\"}, {\"A_level_maths_percent_all\", \"A_level maths percent_all\"}, {\"A_level_chemistry_percent_all\", \"A_level chemistry percent_all\"}, {\"A_level_biological_sciences_percent_all\", \"A_level biological_sciences percent_all\"}, {\"A_level_computer_sciences_percent_all\", \"A_level computer sciences percent_all\"}}),",
+                "    #\"Removed Duplicates\" = Table.Distinct(#\"Renamed Columns\", {\"URN\"})",
                 "in",
-                "    #\"Renamed Columns\""
+                "    #\"Removed Duplicates\""
               ],
               "type": "m"
             }
@@ -1433,7 +1433,6 @@
             ],
             "dataCategory": "PaddedDateTableDates",
             "dataType": "dateTime",
-            "formatString": "General Date",
             "isHidden": true,
             "isNameInferred": true,
             "lineageTag": "1dbdb62a-e858-4f5f-b161-240779fd8db6",
@@ -1456,7 +1455,6 @@
             "dataCategory": "Years",
             "dataType": "int64",
             "expression": "YEAR([Date])",
-            "formatString": "0",
             "isHidden": true,
             "lineageTag": "41e35bbc-7fb0-4093-bf6a-b9128c10c94d",
             "summarizeBy": "none",
@@ -1477,7 +1475,6 @@
             "dataCategory": "MonthOfYear",
             "dataType": "int64",
             "expression": "MONTH([Date])",
-            "formatString": "0",
             "isHidden": true,
             "lineageTag": "5ea6f024-a120-4cf0-aa65-8a1f3fe6ba3d",
             "summarizeBy": "none",
@@ -1519,7 +1516,6 @@
             "dataCategory": "QuarterOfYear",
             "dataType": "int64",
             "expression": "INT(([MonthNo] + 2) / 3)",
-            "formatString": "0",
             "isHidden": true,
             "lineageTag": "be67de9e-851a-4361-bcb8-896d979341d5",
             "summarizeBy": "none",
@@ -1561,7 +1557,6 @@
             "dataCategory": "DayOfMonth",
             "dataType": "int64",
             "expression": "DAY([Date])",
-            "formatString": "0",
             "isHidden": true,
             "lineageTag": "89400fe3-0597-4d4b-882b-ed5149466ea5",
             "summarizeBy": "none",
