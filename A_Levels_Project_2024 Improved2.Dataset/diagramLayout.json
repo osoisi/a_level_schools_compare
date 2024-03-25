@@ -1,0 +1,112 @@
+{
+  "version": "1.1.0",
+  "diagrams": [
+    {
+      "ordinal": 0,
+      "scrollPosition": {
+        "x": 35.833332538604736,
+        "y": 187.5
+      },
+      "nodes": [
+        {
+          "location": {
+            "x": 0,
+            "y": 34
+          },
+          "nodeIndex": "school_information_updated",
+          "nodeLineageTag": "47ab5930-4cd2-4eae-ad39-aa594d3af448",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 6
+        },
+        {
+          "location": {
+            "x": 0,
+            "y": 348
+          },
+          "nodeIndex": "Region City Entries",
+          "nodeLineageTag": "cd9282a6-a4f2-4e58-a433-a8b831f90830",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 3
+        },
+        {
+          "location": {
+            "x": 880.25,
+            "y": 61.25
+          },
+          "nodeIndex": "Maths Science",
+          "nodeLineageTag": "5aa60048-7740-40ff-9a28-6205ea2a8c94",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 4
+        },
+        {
+          "location": {
+            "x": 938,
+            "y": 540
+          },
+          "nodeIndex": "Date",
+          "nodeLineageTag": "de07c01e-cb8b-4eb2-b33b-6a1b6b27c36e",
+          "size": {
+            "height": 200,
+            "width": 234
+          },
+          "zIndex": 1
+        },
+        {
+          "location": {
+            "x": 525.5,
+            "y": 102.75
+          },
+          "nodeIndex": "Regional Information",
+          "nodeLineageTag": "39c39dd5-c642-4085-b82a-c7090cd619c4",
+          "size": {
+            "height": 176,
+            "width": 234
+          },
+          "zIndex": 7
+        },
+        {
+          "location": {
+            "x": 422,
+            "y": 469
+          },
+          "nodeIndex": "School Information",
+          "nodeLineageTag": "417b188b-348c-4714-b00b-d8803f7758f5",
+          "size": {
+            "height": 300,
+            "width": 234
+          },
+          "zIndex": 2
+        },
+        {
+          "location": {
+            "x": 270,
+            "y": 0
+          },
+          "nodeIndex": "Student Progression",
+          "size": {
+            "height": 296,
+            "width": 234
+          },
+          "zIndex": 0
+        }
+      ],
+      "name": "All tables",
+      "zoomValue": 80,
+      "pinKeyFieldsToTop": false,
+      "showExtraHeaderInfo": false,
+      "hideKeyFieldsWhenCollapsed": false,
+      "tablesLocked": false
+    }
+  ],
+  "selectedDiagram": "All tables",
+  "defaultDiagram": "All tables"
+}

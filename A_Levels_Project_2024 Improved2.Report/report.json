@@ -1,0 +1,147 @@
+{
+  "config": "{\"version\":\"5.51\",\"themeCollection\":{\"baseTheme\":{\"name\":\"CY24SU02\",\"version\":\"5.51\",\"type\":2}},\"activeSectionIndex\":0,\"defaultDrillFilterOtherVisuals\":true,\"linguisticSchemaSyncVersion\":2,\"settings\":{\"useNewFilterPaneExperience\":true,\"allowChangeFilterTypes\":true,\"useStylableVisualContainerHeader\":true,\"queryLimitOption\":6,\"exportDataMode\":1,\"useDefaultAggregateDisplayName\":true},\"objects\":{\"section\":[{\"properties\":{\"verticalAlignment\":{\"expr\":{\"Literal\":{\"Value\":\"'Top'\"}}}}}],\"outspacePane\":[{\"properties\":{\"expanded\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]}}",
+  "layoutOptimization": 0,
+  "pods": [
+    {
+      "boundSection": "ReportSection",
+      "config": "{}",
+      "name": "Pod"
+    },
+    {
+      "boundSection": "ReportSection51c4c580110899bcdf82",
+      "config": "{}",
+      "name": "Pod1"
+    }
+  ],
+  "resourcePackages": [
+    {
+      "resourcePackage": {
+        "disabled": false,
+        "items": [
+          {
+            "name": "CY24SU02",
+            "path": "BaseThemes/CY24SU02.json",
+            "type": 202
+          }
+        ],
+        "name": "SharedResources",
+        "type": 2
+      }
+    }
+  ],
+  "sections": [
+    {
+      "config": "{}",
+      "displayName": "Page 1",
+      "displayOption": 1,
+      "filters": "[]",
+      "height": 720.00,
+      "name": "ReportSection",
+      "visualContainers": [
+        {
+          "config": "{\"name\":\"1088efb00be8b2d01dcc\",\"layouts\":[{\"id\":0,\"position\":{\"x\":1029.0577507598784,\"y\":10.699088145896656,\"z\":3000,\"width\":238.29787234042556,\"height\":179.93920972644378,\"tabOrder\":3000}}],\"singleVisual\":{\"visualType\":\"tableEx\",\"projections\":{\"Values\":[{\"queryRef\":\"School Information.School_type\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"School Information\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"School Type\"},\"Name\":\"School Information.School_type\"}],\"OrderBy\":[{\"Direction\":1,\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"School Type\"}}}]},\"drillFilterOtherVisuals\":true,\"objects\":{}}}",
+          "filters": "[{\"name\":\"Filtera0dd50a15b96cd7d12f8\",\"expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"School Information\"}},\"Property\":\"School Type\"}},\"filter\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"School Information\",\"Type\":0}],\"Where\":[{\"Condition\":{\"Not\":{\"Expression\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"School Type\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"null\"}}]]}}}}}]},\"type\":\"Categorical\",\"howCreated\":0,\"objects\":{\"general\":[{\"properties\":{\"isInvertedSelectionMode\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"isHiddenInViewMode\":false}]",
+          "height": 179.94,
+          "width": 238.30,
+          "x": 1029.06,
+          "y": 10.70,
+          "z": 3000.00
+        },
+        {
+          "config": "{\"name\":\"166fc8e5c4c6e59bc26f\",\"layouts\":[{\"id\":0,\"position\":{\"x\":85.59270516717325,\"y\":161.45896656534956,\"z\":0,\"width\":285.95744680851067,\"height\":230.51671732522797,\"tabOrder\":0}}],\"singleVisual\":{\"visualType\":\"pivotTable\",\"projections\":{\"Values\":[{\"queryRef\":\"Min(School Information.School)\"}],\"Rows\":[{\"queryRef\":\"Regional Information.Region Hierarchy.Region\",\"active\":true},{\"queryRef\":\"Regional Information.Region Hierarchy.City\"},{\"queryRef\":\"Regional Information.Region Hierarchy.Post_code\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"School Information\",\"Type\":0},{\"Name\":\"r\",\"Entity\":\"Regional Information\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"School\"}},\"Function\":5},\"Name\":\"Min(School Information.School)\",\"NativeReferenceName\":\"Schools\"},{\"HierarchyLevel\":{\"Expression\":{\"Hierarchy\":{\"Expression\":{\"SourceRef\":{\"Source\":\"r\"}},\"Hierarchy\":\"Region Hierarchy\"}},\"Level\":\"Region\"},\"Name\":\"Regional Information.Region Hierarchy.Region\",\"NativeReferenceName\":\"Region Hierarchy Region\"},{\"HierarchyLevel\":{\"Expression\":{\"Hierarchy\":{\"Expression\":{\"SourceRef\":{\"Source\":\"r\"}},\"Hierarchy\":\"Region Hierarchy\"}},\"Level\":\"City\"},\"Name\":\"Regional Information.Region Hierarchy.City\",\"NativeReferenceName\":\"Region Hierarchy City\"},{\"HierarchyLevel\":{\"Expression\":{\"Hierarchy\":{\"Expression\":{\"SourceRef\":{\"Source\":\"r\"}},\"Hierarchy\":\"Region Hierarchy\"}},\"Level\":\"Post_code\"},\"Name\":\"Regional Information.Region Hierarchy.Post_code\",\"NativeReferenceName\":\"Region Hierarchy Post_code\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"School\"}},\"Function\":5}}}]},\"expansionStates\":[{\"roles\":[\"Rows\"],\"levels\":[{\"queryRefs\":[\"Regional Information.Region Hierarchy.Region\"],\"isCollapsed\":true,\"identityKeys\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"Regional Information\"}},\"Property\":\"Region\"}}],\"isPinned\":true},{\"queryRefs\":[\"Regional Information.Region Hierarchy.City\"],\"isCollapsed\":true,\"isPinned\":true},{\"queryRefs\":[\"Regional Information.Region Hierarchy.Post_code\"],\"isCollapsed\":true}],\"root\":{\"identityValues\":null}}],\"columnProperties\":{\"Min(School Information.School)\":{\"displayName\":\"Schools\"}},\"drillFilterOtherVisuals\":true,\"objects\":{\"columnWidth\":[{\"properties\":{\"value\":{\"expr\":{\"Literal\":{\"Value\":\"65D\"}}}},\"selector\":{\"metadata\":\"Min(School Information.School)\"}}]}}}",
+          "filters": "[]",
+          "height": 230.52,
+          "width": 285.96,
+          "x": 85.59,
+          "y": 161.46,
+          "z": 0.00
+        },
+        {
+          "config": "{\"name\":\"62f53286b3e7567a11ed\",\"layouts\":[{\"id\":0,\"position\":{\"x\":825.775075987842,\"y\":202.31003039513678,\"z\":5000,\"width\":223.7082066869301,\"height\":211.06382978723406,\"tabOrder\":5000}}],\"singleVisual\":{\"visualType\":\"tableEx\",\"projections\":{\"Values\":[{\"queryRef\":\"School Information.OFTSTED Rating\"},{\"queryRef\":\"School Information.School\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"School Information\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"OFTSTED Rating\"},\"Name\":\"School Information.OFTSTED Rating\",\"NativeReferenceName\":\"OFTSTED Rating\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"School\"}},\"Function\":5},\"Name\":\"School Information.School\",\"NativeReferenceName\":\"Schools\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"School\"}},\"Function\":5}}}]},\"columnProperties\":{\"School Information.School\":{\"displayName\":\"Schools\"}},\"drillFilterOtherVisuals\":true,\"objects\":{\"columnWidth\":[{\"properties\":{\"value\":{\"expr\":{\"Literal\":{\"Value\":\"57.380447494760304D\"}}}},\"selector\":{\"metadata\":\"School Information.School\"}}]}}}",
+          "filters": "[{\"name\":\"Filter7ee619706229bf5a08df\",\"expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"School Information\"}},\"Property\":\"OFTSTED Rating\"}},\"type\":\"Categorical\",\"howCreated\":0,\"objects\":{\"general\":[{\"properties\":{\"isInvertedSelectionMode\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]},\"isHiddenInViewMode\":false}]",
+          "height": 211.06,
+          "width": 223.71,
+          "x": 825.78,
+          "y": 202.31,
+          "z": 5000.00
+        },
+        {
+          "config": "{\"name\":\"69f1fbb9cd24e895d8e9\",\"layouts\":[{\"id\":0,\"position\":{\"x\":86,\"y\":507,\"width\":286,\"height\":213,\"z\":7000,\"tabOrder\":7000}}],\"singleVisual\":{\"visualType\":\"pivotTable\",\"projections\":{\"Rows\":[{\"queryRef\":\"School Information.Oftsted Grading\",\"active\":true}],\"Values\":[{\"queryRef\":\"Count(School Information.School)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"School Information\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Oftsted Grading\"},\"Name\":\"School Information.Oftsted Grading\",\"NativeReferenceName\":\"Oftsted Grading\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"School\"}},\"Function\":2},\"Name\":\"Count(School Information.School)\",\"NativeReferenceName\":\"Count of School\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"School\"}},\"Function\":2}}}]},\"expansionStates\":[{\"roles\":[\"Rows\"],\"levels\":[{\"queryRefs\":[\"School Information.Oftsted Grading\"],\"isCollapsed\":true,\"identityKeys\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"School Information\"}},\"Property\":\"Oftsted Grading\"}}],\"isPinned\":true}],\"root\":{\"identityValues\":null}}],\"drillFilterOtherVisuals\":true}}",
+          "filters": "[]",
+          "height": 213.00,
+          "width": 286.00,
+          "x": 86.00,
+          "y": 507.00,
+          "z": 7000.00
+        },
+        {
+          "config": "{\"name\":\"7d83b1c8ce7ff25756c3\",\"layouts\":[{\"id\":0,\"position\":{\"x\":371.5501519756839,\"y\":10.699088145896656,\"z\":2000,\"width\":432.8267477203648,\"height\":402.67477203647417,\"tabOrder\":2000}}],\"singleVisual\":{\"visualType\":\"map\",\"projections\":{\"Category\":[{\"queryRef\":\"School Information.Post_code\",\"active\":true}],\"Series\":[{\"queryRef\":\"Regional Information.Region\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"School Information\",\"Type\":0},{\"Name\":\"r\",\"Entity\":\"Regional Information\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Postcode\"},\"Name\":\"School Information.Post_code\",\"NativeReferenceName\":\"Postcode\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"r\"}},\"Property\":\"Region\"},\"Name\":\"Regional Information.Region\",\"NativeReferenceName\":\"Region\"}]},\"drillFilterOtherVisuals\":true,\"objects\":{\"legend\":[{\"properties\":{\"position\":{\"expr\":{\"Literal\":{\"Value\":\"'TopCenter'\"}}},\"showTitle\":{\"expr\":{\"Literal\":{\"Value\":\"false\"}}}}}]}}}",
+          "filters": "[]",
+          "height": 402.67,
+          "width": 432.83,
+          "x": 371.55,
+          "y": 10.70,
+          "z": 2000.00
+        },
+        {
+          "config": "{\"name\":\"8297beead84102926977\",\"layouts\":[{\"id\":0,\"position\":{\"x\":821.8844984802432,\"y\":10.699088145896656,\"z\":6000,\"width\":207.17325227963528,\"height\":179.93920972644378,\"tabOrder\":6000}}],\"singleVisual\":{\"visualType\":\"tableEx\",\"projections\":{\"Values\":[{\"queryRef\":\"School Information.Other Groupings\"},{\"queryRef\":\"School Information.School Count\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"School Information\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"School Group\"},\"Name\":\"School Information.Other Groupings\",\"NativeReferenceName\":\"School Group\"},{\"Measure\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"School Count\"},\"Name\":\"School Information.School Count\",\"NativeReferenceName\":\"Schools\"}]},\"columnProperties\":{\"School Information.School Count\":{\"displayName\":\"Schools\"}},\"drillFilterOtherVisuals\":true,\"objects\":{\"columnWidth\":[{\"properties\":{\"value\":{\"expr\":{\"Literal\":{\"Value\":\"59.022630530633066D\"}}}},\"selector\":{\"metadata\":\"School Information.School Count\"}}]},\"vcObjects\":{\"background\":[{\"properties\":{\"color\":{\"solid\":{\"color\":{\"expr\":{\"ThemeDataColor\":{\"ColorId\":0,\"Percent\":-0.1}}}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"false\"}}}}}]}}}",
+          "filters": "[]",
+          "height": 179.94,
+          "width": 207.17,
+          "x": 821.88,
+          "y": 10.70,
+          "z": 6000.00
+        },
+        {
+          "config": "{\"name\":\"a051633711ed71ae8f2c\",\"layouts\":[{\"id\":0,\"position\":{\"x\":371.7096018735363,\"y\":420.6713505074161,\"z\":1000,\"width\":908.2903981264637,\"height\":299.76580796252927,\"tabOrder\":1000}}],\"singleVisual\":{\"visualType\":\"tableEx\",\"projections\":{\"Values\":[{\"queryRef\":\"School Information.School\"},{\"queryRef\":\"Maths Science.All_A_levels_students\"},{\"queryRef\":\"Maths Science.Average Science Female\"},{\"queryRef\":\"Maths Science.Average Sciences Male\"},{\"queryRef\":\"student_progressions.OxfordorCambridge\"},{\"queryRef\":\"student_progressions.RussellGroupInstitution\"},{\"queryRef\":\"student_progressions.SustainedLevel4or5destination\"},{\"queryRef\":\"student_progressions.SustainedApprenticeshipDestination\"},{\"queryRef\":\"Student Progression.Column\"},{\"queryRef\":\"School Information.OFTSTED Visit Date\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"School Information\",\"Type\":0},{\"Name\":\"m\",\"Entity\":\"Maths Science\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"Student Progression\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"School\"},\"Name\":\"School Information.School\",\"NativeReferenceName\":\"School\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Females- Progress to Sciences\"},\"Name\":\"Maths Science.Average Science Female\",\"NativeReferenceName\":\"Females- Progress to Sciences\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"Males- Progress to Sciences\"},\"Name\":\"Maths Science.Average Sciences Male\",\"NativeReferenceName\":\"Males- Progress to Sciences\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"m\"}},\"Property\":\"All A-Level Students\"},\"Name\":\"Maths Science.All_A_levels_students\",\"NativeReferenceName\":\"All A-Level Students\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"Progress to Oxford or Cambridge\"},\"Name\":\"student_progressions.OxfordorCambridge\",\"NativeReferenceName\":\"Progress to Oxford or Cambridge\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"Progress to Russell Group Institutions\"},\"Name\":\"student_progressions.RussellGroupInstitution\",\"NativeReferenceName\":\"Progress to Russell Group Institutions\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"Progress to Level 4 or 5 Studies\"},\"Name\":\"student_progressions.SustainedLevel4or5destination\",\"NativeReferenceName\":\"Progress to Level 4 or 5 Studies\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"Progress to Apprenticeships\"},\"Name\":\"student_progressions.SustainedApprenticeshipDestination\",\"NativeReferenceName\":\"Progress to Apprenticeships\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"AVG Progression to Higher Education\"},\"Name\":\"Student Progression.Column\",\"NativeReferenceName\":\"AVG Progression to Higher Education\"},{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"OFTSTED Visit Date\"},\"Name\":\"School Information.OFTSTED Visit Date\",\"NativeReferenceName\":\"OFTSTED Visit Date\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"Progress to Oxford or Cambridge\"}}}]},\"drillFilterOtherVisuals\":true,\"objects\":{\"columnWidth\":[{\"properties\":{\"value\":{\"expr\":{\"Literal\":{\"Value\":\"63.01327088212334D\"}}}},\"selector\":{\"metadata\":\"Maths Science.Average Science Female\"}},{\"properties\":{\"value\":{\"expr\":{\"Literal\":{\"Value\":\"65.55109212057525D\"}}}},\"selector\":{\"metadata\":\"Maths Science.Average Sciences Male\"}},{\"properties\":{\"value\":{\"expr\":{\"Literal\":{\"Value\":\"147.21763762095384D\"}}}},\"selector\":{\"metadata\":\"School Information.School\"}},{\"properties\":{\"value\":{\"expr\":{\"Literal\":{\"Value\":\"63.66666413020994D\"}}}},\"selector\":{\"metadata\":\"Maths Science.All_A_levels_students\"}},{\"properties\":{\"value\":{\"expr\":{\"Literal\":{\"Value\":\"76.0031225604996D\"}}}},\"selector\":{\"metadata\":\"student_progressions.OxfordorCambridge\"}},{\"properties\":{\"value\":{\"expr\":{\"Literal\":{\"Value\":\"75.26102649347183D\"}}}},\"selector\":{\"metadata\":\"student_progressions.RussellGroupInstitution\"}},{\"properties\":{\"value\":{\"expr\":{\"Literal\":{\"Value\":\"67.5201163346246D\"}}}},\"selector\":{\"metadata\":\"student_progressions.SustainedLevel4or5destination\"}},{\"properties\":{\"value\":{\"expr\":{\"Literal\":{\"Value\":\"77.22228017766616D\"}}}},\"selector\":{\"metadata\":\"student_progressions.SustainedApprenticeshipDestination\"}},{\"properties\":{\"value\":{\"expr\":{\"Literal\":{\"Value\":\"80.11634709928552D\"}}}},\"selector\":{\"metadata\":\"Student Progression.Column\"}}]}}}",
+          "filters": "[{\"expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"Student Progression\"}},\"Property\":\"Progress to Apprenticeships\"}},\"filter\":{\"Version\":2,\"From\":[{\"Name\":\"s1\",\"Entity\":\"Student Progression\",\"Type\":0}],\"Where\":[{\"Condition\":{\"Not\":{\"Expression\":{\"Comparison\":{\"ComparisonKind\":0,\"Left\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}},\"Property\":\"Progress to Apprenticeships\"}},\"Right\":{\"Literal\":{\"Value\":\"null\"}}}}}}}]},\"type\":\"Advanced\",\"howCreated\":0,\"isHiddenInViewMode\":false}]",
+          "height": 299.77,
+          "width": 908.29,
+          "x": 371.71,
+          "y": 420.67,
+          "z": 1000.00
+        },
+        {
+          "config": "{\"name\":\"c483e10e95b7cba35097\",\"layouts\":[{\"id\":0,\"position\":{\"x\":191.85011709601875,\"y\":413.6768149882904,\"z\":4000,\"width\":167.8688524590164,\"height\":92.92740046838408,\"tabOrder\":4000}}],\"singleVisual\":{\"visualType\":\"card\",\"projections\":{\"Values\":[{\"queryRef\":\"Sum(School Information.Date Since Oftsted Visit)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"School Information\",\"Type\":0}],\"Select\":[{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Months Since Oftsted Visit\"}},\"Function\":1},\"Name\":\"Sum(School Information.Date Since Oftsted Visit)\",\"NativeReferenceName\":\"Average of Months Since Oftsted Visit\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Months Since Oftsted Visit\"}},\"Function\":1}}}]},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true,\"objects\":{\"categoryLabels\":[{\"properties\":{\"fontSize\":{\"expr\":{\"Literal\":{\"Value\":\"9D\"}}},\"show\":{\"expr\":{\"Literal\":{\"Value\":\"false\"}}}}}]},\"vcObjects\":{\"title\":[{\"properties\":{\"show\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}},\"text\":{\"expr\":{\"Literal\":{\"Value\":\"'Average Number of Months Since Oftsted Visit'\"}}},\"fontSize\":{\"expr\":{\"Literal\":{\"Value\":\"11D\"}}},\"heading\":{\"expr\":{\"Literal\":{\"Value\":\"'Normal'\"}}},\"alignment\":{\"expr\":{\"Literal\":{\"Value\":\"'center'\"}}}}}],\"spacing\":[{\"properties\":{\"verticalSpacing\":{\"expr\":{\"Literal\":{\"Value\":\"0D\"}}}}}],\"padding\":[{\"properties\":{\"bottom\":{\"expr\":{\"Literal\":{\"Value\":\"4D\"}}}}}]}}}",
+          "filters": "[]",
+          "height": 92.93,
+          "width": 167.87,
+          "x": 191.85,
+          "y": 413.68,
+          "z": 4000.00
+        }
+      ],
+      "width": 1280.00
+    },
+    {
+      "config": "{}",
+      "displayName": "Duplicate of Page 1",
+      "displayOption": 1,
+      "filters": "[]",
+      "height": 720.00,
+      "name": "ReportSection51c4c580110899bcdf82",
+      "ordinal": 1,
+      "visualContainers": [
+        {
+          "config": "{\"name\":\"9d70068e0486b4d41177\",\"layouts\":[{\"id\":0,\"position\":{\"x\":429.664324746292,\"y\":22.982045277127245,\"z\":4000,\"width\":850.3356752537081,\"height\":292.77127244340363,\"tabOrder\":4000}}],\"singleVisual\":{\"visualType\":\"clusteredColumnChart\",\"projections\":{\"Category\":[{\"queryRef\":\"Regional Information.Region\",\"active\":true}],\"Y\":[{\"queryRef\":\"CountNonNull(Student Progression.Progress to Oxford or Cambridge)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"r\",\"Entity\":\"Regional Information\",\"Type\":0},{\"Name\":\"s\",\"Entity\":\"Student Progression\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"r\"}},\"Property\":\"Region\"},\"Name\":\"Regional Information.Region\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Progress to Oxford or Cambridge\"}},\"Function\":1},\"Name\":\"CountNonNull(Student Progression.Progress to Oxford or Cambridge)\",\"NativeReferenceName\":\"Average of Progress to Oxford or Cambridge\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Progress to Oxford or Cambridge\"}},\"Function\":1}}}]},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true,\"objects\":{\"categoryAxis\":[{\"properties\":{\"showAxisTitle\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}],\"valueAxis\":[{\"properties\":{\"showAxisTitle\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]}}}",
+          "filters": "[{\"name\":\"Filter6953b02591fe89d2a8cb\",\"filter\":{\"Version\":2,\"From\":[{\"Name\":\"r\",\"Entity\":\"Regional Information\",\"Type\":0},{\"Name\":\"s\",\"Entity\":\"Student Progression\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"School Information\",\"Type\":0}],\"Where\":[{\"Condition\":{\"Exists\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}}}},\"Target\":[{\"SourceRef\":{\"Source\":\"s\"}}]}]},\"type\":\"Passthrough\",\"restatement\":\"Urns that have school information\",\"howCreated\":1},{\"name\":\"Filtera522fef84d29d060ca52\",\"filter\":{\"Version\":2,\"From\":[{\"Name\":\"r\",\"Entity\":\"Regional Information\",\"Type\":0},{\"Name\":\"s\",\"Entity\":\"Student Progression\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"School Information\",\"Type\":0}],\"Where\":[{\"Condition\":{\"Exists\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}}}},\"Target\":[{\"SourceRef\":{\"Source\":\"r\"}}]}]},\"type\":\"Passthrough\",\"restatement\":\"Urns that have school information\",\"howCreated\":1}]",
+          "height": 292.77,
+          "width": 850.34,
+          "x": 429.66,
+          "y": 22.98,
+          "z": 4000.00
+        },
+        {
+          "config": "{\"name\":\"ca15baa4b303fa43b18b\",\"layouts\":[{\"id\":0,\"position\":{\"x\":429.664324746292,\"y\":331.7408274785324,\"z\":3000,\"width\":850.3356752537081,\"height\":388.696330991413,\"tabOrder\":3000}}],\"singleVisual\":{\"visualType\":\"clusteredColumnChart\",\"projections\":{\"Category\":[{\"queryRef\":\"Regional Information.Region\",\"active\":true}],\"Y\":[{\"queryRef\":\"Avg(Student Progression.Progress to Oxford or Cambridge)\"},{\"queryRef\":\"Avg(Student Progression.Progress to Level 4 or 5 Studies)\"},{\"queryRef\":\"CountNonNull(Student Progression.Progress to Apprenticeships)\"}]},\"prototypeQuery\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"Student Progression\",\"Type\":0},{\"Name\":\"r\",\"Entity\":\"Regional Information\",\"Type\":0}],\"Select\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"r\"}},\"Property\":\"Region\"},\"Name\":\"Regional Information.Region\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Progress to Oxford or Cambridge\"}},\"Function\":1},\"Name\":\"Avg(Student Progression.Progress to Oxford or Cambridge)\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Progress to Level 4 or 5 Studies\"}},\"Function\":1},\"Name\":\"Avg(Student Progression.Progress to Level 4 or 5 Studies)\",\"NativeReferenceName\":\"Average of Progress to Level 4 or 5 Studies\"},{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Progress to Apprenticeships\"}},\"Function\":1},\"Name\":\"CountNonNull(Student Progression.Progress to Apprenticeships)\",\"NativeReferenceName\":\"Average of Progress to Apprenticeships\"}],\"OrderBy\":[{\"Direction\":2,\"Expression\":{\"Aggregation\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Progress to Oxford or Cambridge\"}},\"Function\":1}}}]},\"drillFilterOtherVisuals\":true,\"hasDefaultSort\":true,\"objects\":{\"categoryAxis\":[{\"properties\":{\"showAxisTitle\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}],\"valueAxis\":[{\"properties\":{\"showAxisTitle\":{\"expr\":{\"Literal\":{\"Value\":\"true\"}}}}}]}}}",
+          "filters": "[{\"name\":\"Filter6953b02591fe89d2a8cb\",\"filter\":{\"Version\":2,\"From\":[{\"Name\":\"r\",\"Entity\":\"Regional Information\",\"Type\":0},{\"Name\":\"s\",\"Entity\":\"Student Progression\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"School Information\",\"Type\":0}],\"Where\":[{\"Condition\":{\"Exists\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}}}},\"Target\":[{\"SourceRef\":{\"Source\":\"s\"}}]}]},\"type\":\"Passthrough\",\"restatement\":\"Urns that have school information\",\"howCreated\":1},{\"name\":\"Filtera522fef84d29d060ca52\",\"filter\":{\"Version\":2,\"From\":[{\"Name\":\"r\",\"Entity\":\"Regional Information\",\"Type\":0},{\"Name\":\"s\",\"Entity\":\"Student Progression\",\"Type\":0},{\"Name\":\"s1\",\"Entity\":\"School Information\",\"Type\":0}],\"Where\":[{\"Condition\":{\"Exists\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s1\"}}}},\"Target\":[{\"SourceRef\":{\"Source\":\"r\"}}]}]},\"type\":\"Passthrough\",\"restatement\":\"Urns that have school information\",\"howCreated\":1}]",
+          "height": 388.70,
+          "width": 850.34,
+          "x": 429.66,
+          "y": 331.74,
+          "z": 3000.00
+        }
+      ],
+      "width": 1280.00
+    }
+  ]
+}
