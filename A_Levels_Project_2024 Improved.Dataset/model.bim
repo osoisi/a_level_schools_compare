@@ -2785,9 +2785,10 @@
                 "    #\"Reordered Columns\" = Table.ReorderColumns(#\"Expanded National_Statistics_Postcode_Lookup_UK\",{\"URN\", \"SCHSTATUS\", \"Minor Group\", \"School Type\", \"ISPOST16\", \"Age Group\", \"Gender\", \"Associated With\", \"Admission Policy\", \"Postcode\", \"Postcode 3\", \"Town\", \"LA Code\", \"Location\", \"County Name\", \"Local Authority Name\", \"Ward Name\", \"Country Name\", \"Region Name\", \"Longitude\", \"Latitude\", \"Spatial Accuracy\", \"Last Uploaded\", \"Location.1\", \"Socrata ID\"}),",
                 "    #\"Removed Columns\" = Table.RemoveColumns(#\"Reordered Columns\",{\"Postcode 3\", \"LA Code\", \"Country Name\", \"Spatial Accuracy\"}),",
                 "    #\"Renamed Columns\" = Table.RenameColumns(#\"Removed Columns\",{{\"Location.1\", \"Lat Long\"}}),",
-                "    #\"Removed Columns1\" = Table.RemoveColumns(#\"Renamed Columns\",{\"Socrata ID\", \"Postcode\", \"Town\", \"Location\", \"County Name\", \"Local Authority Name\", \"Ward Name\", \"Region Name\", \"Longitude\", \"Latitude\", \"Last Uploaded\", \"Lat Long\"})",
+                "    #\"Removed Columns1\" = Table.RemoveColumns(#\"Renamed Columns\",{\"Socrata ID\", \"Postcode\", \"Town\", \"Location\", \"County Name\", \"Local Authority Name\", \"Ward Name\", \"Region Name\", \"Longitude\", \"Latitude\", \"Last Uploaded\", \"Lat Long\"}),",
+                "    #\"Replaced Value\" = Table.ReplaceValue(#\"Removed Columns1\",null,\"Not Provided\",Replacer.ReplaceValue,{\"Admission Policy\"})",
                 "in",
-                "    #\"Removed Columns1\""
+                "    #\"Replaced Value\""
               ],
               "type": "m"
             }
