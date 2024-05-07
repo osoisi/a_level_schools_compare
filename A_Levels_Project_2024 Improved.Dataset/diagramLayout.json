@@ -4,8 +4,8 @@
     {
       "ordinal": 0,
       "scrollPosition": {
-        "x": 150,
-        "y": 155
+        "x": 0,
+        "y": 20
       },
       "nodes": [
         {
@@ -19,7 +19,7 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 6
+          "zIndex": 4
         },
         {
           "location": {
@@ -32,20 +32,7 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 5
-        },
-        {
-          "location": {
-            "x": 0,
-            "y": 240
-          },
-          "nodeIndex": "Other Information",
-          "nodeLineageTag": "0bcc94b0-b61a-4ab5-b180-b533f036c654",
-          "size": {
-            "height": 300,
-            "width": 234
-          },
-          "zIndex": 4
+          "zIndex": 3
         },
         {
           "location": {
@@ -71,20 +58,7 @@
             "height": 200,
             "width": 234
           },
-          "zIndex": 8
-        },
-        {
-          "location": {
-            "x": 1.25,
-            "y": 612.5
-          },
-          "nodeIndex": "National_Statistics_Postcode_Lookup_UK",
-          "nodeLineageTag": "58fca2d3-fbcc-4f27-a8e3-4b20612f47d7",
-          "size": {
-            "height": 300,
-            "width": 234
-          },
-          "zIndex": 3
+          "zIndex": 5
         },
         {
           "location": {
@@ -109,7 +83,7 @@
             "height": 300,
             "width": 234
           },
-          "zIndex": 9
+          "zIndex": 6
         },
         {
           "location": {
