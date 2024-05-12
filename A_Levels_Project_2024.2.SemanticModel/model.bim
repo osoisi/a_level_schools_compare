@@ -1,0 +1,2000 @@
+{
+  "compatibilityLevel": 1567,
+  "model": {
+    "annotations": [
+      {
+        "name": "PBI_QueryOrder",
+        "value": "[\"Maths and Science Scores\",\"Progressions\",\"Other Information\",\"School Information\",\"Region Results\",\"National_Statistics_Postcode_Lookup_UK\",\"Additional Information\",\"Location Information\"]"
+      },
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "1"
+      },
+      {
+        "name": "PBIDesktopVersion",
+        "value": "2.128.1380.0 (24.04)"
+      },
+      {
+        "name": "PBI_ProTooling",
+        "value": "[\"DevMode\"]"
+      }
+    ],
+    "culture": "en-GB",
+    "cultures": [
+      {
+        "name": "en-GB",
+        "linguisticMetadata": {
+          "content": {
+            "Language": "en-US",
+            "Version": "1.0.0"
+          },
+          "contentType": "json"
+        }
+      }
+    ],
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "expressions": [
+      {
+        "name": "Other Information",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = Sql.Databases(\"localhost\\SQLEXPRESS\"),",
+          "    a_levels_study_db = Source{[Name=\"a_levels_study_db\"]}[Data],",
+          "    dbo_s_england_school_information = a_levels_study_db{[Schema=\"dbo\",Item=\"s_england_school_information\"]}[Data],",
+          "    #\"Removed Columns\" = Table.RemoveColumns(dbo_s_england_school_information,{\"STREET\", \"LOCALITY\", \"ADDRESS3\"}),",
+          "    #\"Filtered Rows\" = Table.SelectRows(#\"Removed Columns\", each ([SCHSTATUS] <> \"Closed\")),",
+          "    #\"Removed Columns1\" = Table.RemoveColumns(#\"Filtered Rows\",{\"CLOSEDATE\", \"ISPRIMARY\", \"ISSECONDARY\"}),",
+          "    #\"Filtered Rows1\" = Table.SelectRows(#\"Removed Columns1\", each ([ISPOST16] = \"1\")),",
+          "    #\"Removed Columns2\" = Table.RemoveColumns(#\"Filtered Rows1\",{\"AGELOW\"}),",
+          "    #\"Trimmed Text\" = Table.TransformColumns(Table.TransformColumnTypes(#\"Removed Columns2\", {{\"OFSTEDLASTINSP\", type text}, {\"URN\", type text}}, \"en-GB\"),{{\"OFSTEDLASTINSP\", Text.Trim, type text}, {\"OFSTEDRATING\", Text.Trim, type text}, {\"ADMPOL\", Text.Trim, type text}, {\"RELCHAR\", Text.Trim, type text}, {\"GENDER\", Text.Trim, type text}, {\"AGEHIGH\", Text.Trim, type text}, {\"ISPOST16\", Text.Trim, type text}, {\"SCHOOLTYPE\", Text.Trim, type text}, {\"MINORGROUP\", Text.Trim, type text}, {\"SCHSTATUS\", Text.Trim, type text}, {\"POSTCODE\", Text.Trim, type text}, {\"TOWN\", Text.Trim, type text}, {\"SCHNAME\", Text.Trim, type text}, {\"LAESTAB\", Text.Trim, type text}, {\"ESTAB\", Text.Trim, type text}, {\"LA\", Text.Trim, type text}, {\"LANAME\", Text.Trim, type text}, {\"URN\", Text.Trim, type text}}),",
+          "    #\"Cleaned Text\" = Table.TransformColumns(#\"Trimmed Text\",{{\"OFSTEDLASTINSP\", Text.Clean, type text}, {\"OFSTEDRATING\", Text.Clean, type text}, {\"ADMPOL\", Text.Clean, type text}, {\"RELCHAR\", Text.Clean, type text}, {\"GENDER\", Text.Clean, type text}, {\"AGEHIGH\", Text.Clean, type text}, {\"ISPOST16\", Text.Clean, type text}, {\"SCHOOLTYPE\", Text.Clean, type text}, {\"MINORGROUP\", Text.Clean, type text}, {\"SCHSTATUS\", Text.Clean, type text}, {\"POSTCODE\", Text.Clean, type text}, {\"TOWN\", Text.Clean, type text}, {\"SCHNAME\", Text.Clean, type text}, {\"LAESTAB\", Text.Clean, type text}, {\"ESTAB\", Text.Clean, type text}, {\"LA\", Text.Clean, type text}, {\"LANAME\", Text.Clean, type text}, {\"URN\", Text.Clean, type text}}),",
+          "    #\"Replaced Value\" = Table.ReplaceValue(#\"Cleaned Text\",null,\"No Rating\",Replacer.ReplaceValue,{\"OFSTEDRATING\"}),",
+          "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Replaced Value\",{{\"OFSTEDLASTINSP\", type datetime}}),",
+          "    #\"Replaced Value1\" = Table.ReplaceValue(#\"Changed Type\",\"Null\",\"None\",Replacer.ReplaceText,{\"RELCHAR\"}),",
+          "    #\"Filtered Rows2\" = Table.SelectRows(#\"Replaced Value1\", each true),",
+          "    #\"Replaced Value2\" = Table.ReplaceValue(#\"Filtered Rows2\",null,\"None\",Replacer.ReplaceValue,{\"RELCHAR\"}),",
+          "    #\"Removed Columns3\" = Table.RemoveColumns(#\"Replaced Value2\",{\"OFSTEDRATING\", \"OFSTEDLASTINSP\", \"SCHNAME\", \"LAESTAB\", \"ESTAB\"}),",
+          "    #\"Renamed Columns\" = Table.RenameColumns(#\"Removed Columns3\",{{\"LANAME\", \"Location\"}, {\"LA\", \"LA Code\"}, {\"TOWN\", \"Town\"}, {\"POSTCODE\", \"Postcode\"}, {\"MINORGROUP\", \"Minor Group\"}, {\"SCHOOLTYPE\", \"School Type\"}, {\"AGEHIGH\", \"Age Group\"}}),",
+          "    #\"Changed Type1\" = Table.TransformColumnTypes(#\"Renamed Columns\",{{\"Age Group\", Int64.Type}}),",
+          "    #\"Added Conditional Column\" = Table.AddColumn(#\"Changed Type1\", \"Custom\", each if [Age Group] < 22 then \"17-21\" else if [Age Group] < 25 then \"21-25\" else \"Above 25\"),",
+          "    #\"Reordered Columns\" = Table.ReorderColumns(#\"Added Conditional Column\",{\"URN\", \"Location\", \"LA Code\", \"Town\", \"Postcode\", \"SCHSTATUS\", \"Minor Group\", \"School Type\", \"ISPOST16\", \"Age Group\", \"Custom\", \"GENDER\", \"RELCHAR\", \"ADMPOL\"}),",
+          "    #\"Removed Columns4\" = Table.RemoveColumns(#\"Reordered Columns\",{\"Age Group\"}),",
+          "    #\"Renamed Columns1\" = Table.RenameColumns(#\"Removed Columns4\",{{\"Custom\", \"Age Group\"}, {\"GENDER\", \"Gender\"}, {\"RELCHAR\", \"Associated With\"}, {\"ADMPOL\", \"Admission Policy\"}}),",
+          "    #\"Removed Columns5\" = Table.RemoveColumns(#\"Renamed Columns1\",{\"Postcode\"}),",
+          "    #\"Changed Type2\" = Table.TransformColumnTypes(#\"Removed Columns5\",{{\"URN\", Int64.Type}}),",
+          "    #\"Merged Queries\" = Table.NestedJoin(#\"Changed Type2\", {\"URN\"}, #\"School Information\", {\"URN\"}, \"School Information\", JoinKind.LeftOuter),",
+          "    #\"Expanded School Information\" = Table.ExpandTableColumn(#\"Merged Queries\", \"School Information\", {\"Postcode\"}, {\"Postcode\"}),",
+          "    #\"Reordered Columns1\" = Table.ReorderColumns(#\"Expanded School Information\",{\"URN\", \"Location\", \"LA Code\", \"Town\", \"Postcode\", \"SCHSTATUS\", \"Minor Group\", \"School Type\", \"ISPOST16\", \"Age Group\", \"Gender\", \"Associated With\", \"Admission Policy\"})",
+          "in",
+          "    #\"Reordered Columns1\""
+        ],
+        "kind": "m",
+        "lineageTag": "3270f8b6-a3cb-465f-96fb-b51ff8be527e"
+      },
+      {
+        "name": "National_Statistics_Postcode_Lookup_UK",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "expression": [
+          "let",
+          "    Source = Csv.Document(File.Contents(\"C:\\Users\\aa1\\Downloads\\National_Statistics_Postcode_Lookup_UK.csv\"),[Delimiter=\",\", Columns=36, Encoding=1252, QuoteStyle=QuoteStyle.None]),",
+          "    #\"Promoted Headers\" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+          "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Promoted Headers\",{{\"Postcode 1\", type text}, {\"Postcode 2\", type text}, {\"Postcode 3\", type text}, {\"Date Introduced\", Int64.Type}, {\"User Type\", Int64.Type}, {\"Easting\", Int64.Type}, {\"Northing\", Int64.Type}, {\"Positional Quality\", Int64.Type}, {\"County Code\", type text}, {\"County Name\", type text}, {\"Local Authority Code\", type text}, {\"Local Authority Name\", type text}, {\"Ward Code\", type text}, {\"Ward Name\", type text}, {\"Country Code\", type text}, {\"Country Name\", type text}, {\"Region Code\", type text}, {\"Region Name\", type text}, {\"Parliamentary Constituency Code\", type text}, {\"Parliamentary Constituency Name\", type text}, {\"European Electoral Region Code\", type text}, {\"European Electoral Region Name\", type text}, {\"Primary Care Trust Code\", type text}, {\"Primary Care Trust Name\", type text}, {\"Lower Super Output Area Code\", type text}, {\"Lower Super Output Area Name\", type text}, {\"Middle Super Output Area Code\", type text}, {\"Middle Super Output Area Name\", type text}, {\"Output Area Classification Code\", type text}, {\"Output Area Classification Name\", type text}, {\"Longitude\", type number}, {\"Latitude\", type number}, {\"Spatial Accuracy\", type text}, {\"Last Uploaded\", type date}, {\"Location\", type text}, {\"Socrata ID\", Int64.Type}})",
+          "in",
+          "    #\"Changed Type\""
+        ],
+        "kind": "m",
+        "lineageTag": "80a81ffd-f91a-4c81-8194-76705e35e15b"
+      }
+    ],
+    "relationships": [
+      {
+        "name": "65563e91-0b20-419f-ad6b-3b83cedd747a",
+        "crossFilteringBehavior": "bothDirections",
+        "fromCardinality": "one",
+        "fromColumn": "URN",
+        "fromTable": "Maths and Science Scores",
+        "toColumn": "URN",
+        "toTable": "School Information"
+      },
+      {
+        "name": "d09236f6-3865-4e5a-9223-cc6a1a40b227",
+        "fromColumn": "URN",
+        "fromTable": "Progressions",
+        "toColumn": "URN",
+        "toTable": "School Information"
+      },
+      {
+        "name": "b11ed49e-fe59-46ff-8549-63d76789c61b",
+        "fromColumn": "LA Code",
+        "fromTable": "School Information",
+        "toColumn": "LA CODE",
+        "toTable": "Region Results"
+      },
+      {
+        "name": "69760aad-9e4a-4ab7-ad2e-0bb6d36a53e4",
+        "crossFilteringBehavior": "bothDirections",
+        "fromCardinality": "one",
+        "fromColumn": "URN",
+        "fromTable": "Additional Information",
+        "toColumn": "URN",
+        "toTable": "School Information"
+      },
+      {
+        "name": "fb8bb5ff-0535-4eea-bed3-bf33d6b09953",
+        "fromColumn": "Last Ofsted Visit",
+        "fromTable": "School Information",
+        "toColumn": "Date",
+        "toTable": "Date"
+      },
+      {
+        "name": "0f888c0f-9872-4805-888e-70d5c15d84a5",
+        "crossFilteringBehavior": "bothDirections",
+        "fromCardinality": "one",
+        "fromColumn": "URN",
+        "fromTable": "Location Information",
+        "toColumn": "URN",
+        "toTable": "School Information"
+      }
+    ],
+    "sourceQueryCulture": "en-GB",
+    "tables": [
+      {
+        "name": "DateTableTemplate_8aaefe91-025f-45c1-91e4-f14e31b2ef65",
+        "annotations": [
+          {
+            "name": "__PBI_TemplateDateTable",
+            "value": "true"
+          },
+          {
+            "name": "DefaultItem",
+            "value": "DateHierarchy"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataCategory": "PaddedDateTableDates",
+            "dataType": "dateTime",
+            "isHidden": true,
+            "isNameInferred": true,
+            "lineageTag": "5b8c5538-5ce0-4cc9-89b9-a2f2f4a1ec38",
+            "sourceColumn": "[Date]",
+            "summarizeBy": "none",
+            "type": "calculatedTableColumn"
+          },
+          {
+            "name": "Year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Year"
+              }
+            ],
+            "dataCategory": "Years",
+            "dataType": "int64",
+            "expression": "YEAR([Date])",
+            "isHidden": true,
+            "lineageTag": "9cc48c00-ab90-4ae2-ba48-97f2825f4f82",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "MonthNo",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "MonthNumber"
+              }
+            ],
+            "dataCategory": "MonthOfYear",
+            "dataType": "int64",
+            "expression": "MONTH([Date])",
+            "isHidden": true,
+            "lineageTag": "d691f8ed-7c8d-48bc-bdce-bac2ec2f12ab",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Month",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Month"
+              }
+            ],
+            "dataCategory": "Months",
+            "dataType": "string",
+            "expression": "FORMAT([Date], \"MMMM\")",
+            "isHidden": true,
+            "lineageTag": "b65767ab-6b05-4a51-94de-83ce5de8fcba",
+            "sortByColumn": "MonthNo",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "QuarterNo",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "QuarterNumber"
+              }
+            ],
+            "dataCategory": "QuarterOfYear",
+            "dataType": "int64",
+            "expression": "INT(([MonthNo] + 2) / 3)",
+            "isHidden": true,
+            "lineageTag": "1998ecbc-49f4-4521-84e5-706ae4555924",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Quarter",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Quarter"
+              }
+            ],
+            "dataCategory": "Quarters",
+            "dataType": "string",
+            "expression": "\"Qtr \" & [QuarterNo]",
+            "isHidden": true,
+            "lineageTag": "474023ed-db30-4f41-ba5a-66d715a362fc",
+            "sortByColumn": "QuarterNo",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Day",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "TemplateId",
+                "value": "Day"
+              }
+            ],
+            "dataCategory": "DayOfMonth",
+            "dataType": "int64",
+            "expression": "DAY([Date])",
+            "isHidden": true,
+            "lineageTag": "1adb9d04-bc02-4f7e-8ad9-5df87fa446e5",
+            "summarizeBy": "none",
+            "type": "calculated"
+          }
+        ],
+        "hierarchies": [
+          {
+            "name": "Date Hierarchy",
+            "annotations": [
+              {
+                "name": "TemplateId",
+                "value": "DateHierarchy"
+              }
+            ],
+            "levels": [
+              {
+                "name": "Year",
+                "column": "Year",
+                "lineageTag": "e5f1b1be-45c4-45ba-b4ce-5fda789c83cf",
+                "ordinal": 0
+              },
+              {
+                "name": "Quarter",
+                "column": "Quarter",
+                "lineageTag": "8bbf56b7-d038-467e-aa46-715dd490c174",
+                "ordinal": 1
+              },
+              {
+                "name": "Month",
+                "column": "Month",
+                "lineageTag": "c1d902ef-f9cd-4bd5-9fb3-e5cfa8a2579d",
+                "ordinal": 2
+              },
+              {
+                "name": "Day",
+                "column": "Day",
+                "lineageTag": "6dd6b8c8-2bc9-4b93-a576-e9d33a854cf7",
+                "ordinal": 3
+              }
+            ],
+            "lineageTag": "4c163238-02b1-4290-9629-144dd6be3ca6"
+          }
+        ],
+        "isHidden": true,
+        "isPrivate": true,
+        "lineageTag": "45255748-45e9-44d2-a320-e47f3606914d",
+        "partitions": [
+          {
+            "name": "DateTableTemplate_8aaefe91-025f-45c1-91e4-f14e31b2ef65",
+            "mode": "import",
+            "source": {
+              "expression": "Calendar(Date(2015,1,1), Date(2015,1,1))",
+              "type": "calculated"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Maths and Science Scores",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Local Authority",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "3693bca7-b497-4376-aa0c-7aa9508f35c7",
+            "sourceColumn": "Local Authority",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "URN",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "536577ce-4742-45d8-b46b-5ae5700120ca",
+            "sourceColumn": "URN",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "All Students",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "8c1e4a34-719b-4447-8e73-b0c9bc22ee64",
+            "sourceColumn": "All Students",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "A-Level Maths",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "af86a1c6-21d2-45e9-ac99-b17d3efd9e4d",
+            "sourceColumn": "A-Level Maths",
+            "summarizeBy": "average"
+          },
+          {
+            "name": "A-Level Further Maths",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "73bb9d77-2a7c-473e-8058-1a2862d1f408",
+            "sourceColumn": "A-Level Further Maths",
+            "summarizeBy": "average"
+          },
+          {
+            "name": "A-Level Biology",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "edcf1099-51f9-44fe-bfaf-1b1497af0499",
+            "sourceColumn": "A-Level Biology",
+            "summarizeBy": "average"
+          },
+          {
+            "name": "A Level Chemistry",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "dbf1a7fa-188d-4677-a474-f5d2af855e86",
+            "sourceColumn": "A Level Chemistry",
+            "summarizeBy": "average"
+          },
+          {
+            "name": "A-Level Physics",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "e4088bee-d56b-4d0e-9181-7ff31e04c300",
+            "sourceColumn": "A-Level Physics",
+            "summarizeBy": "average"
+          },
+          {
+            "name": "A-Level Comp. Science",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "bce091cf-8c34-48ce-b152-93dee11446bb",
+            "sourceColumn": "A-Level Comp. Science",
+            "summarizeBy": "average"
+          },
+          {
+            "name": "Female Science Students",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "7dfdc807-8885-4880-820d-75aa3991b6e2",
+            "sourceColumn": "Female Science Students",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "A-Level Maths (Female)",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "double",
+            "isHidden": true,
+            "lineageTag": "e1dcd802-53c1-4c38-b2b4-d6e55a4a8466",
+            "sourceColumn": "A-Level Maths (Female)",
+            "summarizeBy": "average"
+          },
+          {
+            "name": "Male Science Students",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "e5f50a3b-9032-4467-8ed7-e325c3259b01",
+            "sourceColumn": "Male Science Students",
+            "summarizeBy": "sum"
+          }
+        ],
+        "lineageTag": "39923177-3603-4180-89e9-38eb7ad76836",
+        "partitions": [
+          {
+            "name": "Maths and Science Scores",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Sql.Databases(\"localhost\\SQLEXPRESS\"),",
+                "    a_levels_study_db = Source{[Name=\"a_levels_study_db\"]}[Data],",
+                "    #\"dbo_16-18_Maths_&_Science_A2023\" = a_levels_study_db{[Schema=\"dbo\",Item=\"16-18_Maths_&_Science_A2023\"]}[Data],",
+                "    #\"Renamed Columns\" = Table.RenameColumns(#\"dbo_16-18_Maths_&_Science_A2023\",{{\"Ref\", \"URN\"}}),",
+                "    #\"Removed Columns\" = Table.RemoveColumns(#\"Renamed Columns\",{\"Region\", \"Gender_info\", \"School_type\"}),",
+                "    #\"Divided Column\" = Table.TransformColumns(#\"Removed Columns\", {{\"A_level_maths_percent_all\", each _ / 100, type number}}),",
+                "    #\"Divided Column1\" = Table.TransformColumns(#\"Divided Column\", {{\"A_level_further_maths_percent_all\", each _ / 100, type number}}),",
+                "    #\"Divided Column2\" = Table.TransformColumns(#\"Divided Column1\", {{\"A_level_biological_sciences_percent_all\", each _ / 100, type number}}),",
+                "    #\"Divided Column3\" = Table.TransformColumns(#\"Divided Column2\", {{\"A_level_biological_sciences_percent_all\", each _ / 100, type number}}),",
+                "    #\"Divided Column4\" = Table.TransformColumns(#\"Divided Column3\", {{\"A_level_chemistry_percent_all\", each _ / 100, type number}}),",
+                "    #\"Divided Column5\" = Table.TransformColumns(#\"Divided Column4\", {{\"A_level_physics_percent_all\", each _ / 100, type number}}),",
+                "    #\"Divided Column6\" = Table.TransformColumns(#\"Divided Column5\", {{\"A_level_computer_sciences_percent_all\", each _ / 100, type number}}),",
+                "    #\"Divided Column7\" = Table.TransformColumns(#\"Divided Column6\", {{\"A_level_maths_percent_female\", each _ / 100, type number}}),",
+                "    #\"Divided Column8\" = Table.TransformColumns(#\"Divided Column7\", {{\"A_level_further_maths_percent_female\", each _ / 100, type number}}),",
+                "    #\"Divided Column9\" = Table.TransformColumns(#\"Divided Column8\", {{\"A_level_biological_sciences_percent_female\", each _ / 100, type number}}),",
+                "    #\"Divided Column10\" = Table.TransformColumns(#\"Divided Column9\", {{\"A_level_chemistry_percent_female\", each _ / 100, type number}}),",
+                "    #\"Divided Column11\" = Table.TransformColumns(#\"Divided Column10\", {{\"A_level_physics_percent_female\", each _ / 100, type number}}),",
+                "    #\"Divided Column12\" = Table.TransformColumns(#\"Divided Column11\", {{\"A_level_computer_sciences_percent_female\", each _ / 100, type number}}),",
+                "    #\"Divided Column13\" = Table.TransformColumns(#\"Divided Column12\", {{\"A_level_Maths_percent_male\", each _ / 100, type number}}),",
+                "    #\"Divided Column14\" = Table.TransformColumns(#\"Divided Column13\", {{\"A_level_further_maths_percent_male\", each _ / 100, type number}}),",
+                "    #\"Divided Column15\" = Table.TransformColumns(#\"Divided Column14\", {{\"A_level_biological_sciences_percent_male\", each _ / 100, type number}}),",
+                "    #\"Divided Column16\" = Table.TransformColumns(#\"Divided Column15\", {{\"A_level_chemistry_percent_male\", each _ / 100, type number}}),",
+                "    #\"Divided Column17\" = Table.TransformColumns(#\"Divided Column16\", {{\"A_level_physics_percent_male\", each _ / 100, type number}}),",
+                "    #\"Divided Column18\" = Table.TransformColumns(#\"Divided Column17\", {{\"A_level_computer_sciences_percent_male\", each _ / 100, type number}}),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Divided Column18\",{{\"A_level_computer_sciences_percent_male\", Percentage.Type}, {\"A_level_physics_percent_male\", Percentage.Type}, {\"A_level_chemistry_percent_male\", Percentage.Type}, {\"A_level_biological_sciences_percent_male\", Percentage.Type}, {\"A_level_further_maths_percent_male\", Percentage.Type}, {\"A_level_Maths_percent_male\", Percentage.Type}, {\"Male_A_levels_students\", Int64.Type}, {\"A_level_computer_sciences_percent_female\", Percentage.Type}, {\"A_level_physics_percent_female\", Percentage.Type}, {\"A_level_chemistry_percent_female\", Percentage.Type}, {\"A_level_biological_sciences_percent_female\", Percentage.Type}, {\"A_level_further_maths_percent_female\", Percentage.Type}, {\"A_level_maths_percent_female\", Percentage.Type}, {\"Female_A_levels_students\", Int64.Type}, {\"A_level_computer_sciences_percent_all\", Percentage.Type}, {\"A_level_physics_percent_all\", Percentage.Type}, {\"A_level_chemistry_percent_all\", Percentage.Type}, {\"A_level_biological_sciences_percent_all\", Percentage.Type}, {\"A_level_further_maths_percent_all\", Percentage.Type}, {\"A_level_maths_percent_all\", Percentage.Type}, {\"All_A_levels_students\", Int64.Type}}),",
+                "    #\"Removed Columns1\" = Table.RemoveColumns(#\"Changed Type\",{\"School_name\"}),",
+                "    #\"Renamed Columns1\" = Table.RenameColumns(#\"Removed Columns1\",{{\"Local_Authority\", \"Local Authority\"}, {\"All_A_levels_students\", \"All Students\"}, {\"A_level_maths_percent_all\", \"A-Level Maths\"}, {\"A_level_further_maths_percent_all\", \"A-Level Further Maths\"}, {\"A_level_biological_sciences_percent_all\", \"A-Level Biology\"}, {\"A_level_chemistry_percent_all\", \"A Level Chemistry\"}, {\"A_level_physics_percent_all\", \"A-Level Physics\"}, {\"A_level_computer_sciences_percent_all\", \"A-Level Comp. Science\"}, {\"Female_A_levels_students\", \"Female Students\"}, {\"A_level_maths_percent_female\", \"A-Level Maths (Female)\"}}),",
+                "    #\"Removed Columns2\" = Table.RemoveColumns(#\"Renamed Columns1\",{\"A_level_further_maths_percent_female\", \"A_level_biological_sciences_percent_female\", \"A_level_chemistry_percent_female\", \"A_level_physics_percent_female\", \"A_level_computer_sciences_percent_female\"}),",
+                "    #\"Renamed Columns2\" = Table.RenameColumns(#\"Removed Columns2\",{{\"Male_A_levels_students\", \"Male Students\"}}),",
+                "    #\"Removed Columns3\" = Table.RemoveColumns(#\"Renamed Columns2\",{\"A_level_Maths_percent_male\", \"A_level_further_maths_percent_male\", \"A_level_biological_sciences_percent_male\", \"A_level_chemistry_percent_male\", \"A_level_physics_percent_male\", \"A_level_computer_sciences_percent_male\"}),",
+                "    #\"Renamed Columns3\" = Table.RenameColumns(#\"Removed Columns3\",{{\"Female Students\", \"Female Science Students\"}, {\"Male Students\", \"Male Science Students\"}})",
+                "in",
+                "    #\"Renamed Columns3\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Progressions",
+        "annotations": [
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          }
+        ],
+        "columns": [
+          {
+            "name": "URN",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "ebc2179e-943c-4262-a6c7-80402bcb0403",
+            "sourceColumn": "URN",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "All Students",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "c79d5e95-c90c-4889-85c2-e26eacfdc915",
+            "sourceColumn": "All Students",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "All Progressions",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0%;-0%;0%",
+            "lineageTag": "2a60622c-4c56-4355-bf5f-413505dca17b",
+            "sourceColumn": "All Progressions",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Progress to Russel Group",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0%;-0%;0%",
+            "lineageTag": "5bcdf0ba-dd93-47e2-839b-094cda267cc0",
+            "sourceColumn": "Progress to Russel Group",
+            "summarizeBy": "average"
+          },
+          {
+            "name": "Progress to OXBRIDGE",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "User"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0%;-0%;0%",
+            "lineageTag": "799a63b0-bef8-4aba-ab9b-6e986a934bb2",
+            "sourceColumn": "Progress to OXBRIDGE",
+            "summarizeBy": "average"
+          }
+        ],
+        "lineageTag": "da71e075-fe13-46e4-8bd0-9024399e8407",
+        "measures": [
+          {
+            "name": "SelectRating",
+            "expression": "IF(ISBLANK(SELECTEDVALUE('School Information'[Ofsted Rating])),SELECTEDVALUE('Additional Information'[Age Group]),SELECTEDVALUE('School Information'[Ofsted Rating]))",
+            "lineageTag": "9b956898-bde2-437e-83a8-c3954455baf9"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Progressions",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Sql.Databases(\"localhost\\SQLEXPRESS\"),",
+                "    a_levels_study_db = Source{[Name=\"a_levels_study_db\"]}[Data],",
+                "    #\"dbo_england_ks5-studest-higher_education\" = a_levels_study_db{[Schema=\"dbo\",Item=\"england_ks5-studest-higher_education\"]}[Data],",
+                "    #\"Removed Columns\" = Table.RemoveColumns(#\"dbo_england_ks5-studest-higher_education\",{\"RECTYPE\", \"LEA\", \"ESTAB\", \"SCHNAME\", \"NFTYPE\", \"FEEDER\", \"ICLOSE\", \"ALL_BAND\", \"ALL_SCORE\", \"ALL_UPPER\", \"ALL_LOWER\"}),",
+                "    #\"Replaced Value\" = Table.ReplaceValue(#\"Removed Columns\",\"SUPP\",\"\",Replacer.ReplaceText,{\"ALL_PROGRESSED\"}),",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"Replaced Value\",{{\"ALL_PROGRESSED\", Percentage.Type}}),",
+                "    #\"Replaced Value1\" = Table.ReplaceValue(#\"Changed Type\",\"SP\",\"\",Replacer.ReplaceText,{\"ALL_APPREN\", \"ALL_HE\", \"ALL_TOP3RD\", \"ALL_RUSSELL\", \"ALL_OXBRIDGE\", \"ALL_HTECH\", \"ACADAGEN_COHORT\", \"ACADAGEN_PROGRESSED\", \"ACADAGEN_SCORE\", \"ACADAGEN_UPPER\", \"ACADAGEN_LOWER\", \"ACADAGEN_BAND\", \"TLEV_COHORT\", \"TLEV_PROGRESSED\", \"TLEV_SCORE\", \"TLEV_UPPER\", \"TLEV_LOWER\", \"TLEV_BAND\", \"OTHER_COHORT\", \"OTHER_PROGRESSED\", \"OTHER_SCORE\", \"OTHER_UPPER\", \"OTHER_LOWER\", \"OTHER_BAND\", \"DIS_PROGRESSED\", \"DIS_APPREN\", \"DIS_HE\", \"DIS_TOP3RD\", \"DIS_RUSSELL\", \"DIS_OXBRIDGE\", \"DIS_HTECH\"}),",
+                "    #\"Replaced Value2\" = Table.ReplaceValue(#\"Replaced Value1\",\"SUPP\",\"\",Replacer.ReplaceText,{\"ALL_APPREN\", \"ALL_HE\", \"ALL_TOP3RD\", \"ALL_RUSSELL\", \"ALL_OXBRIDGE\", \"ALL_HTECH\", \"ACADAGEN_COHORT\", \"ACADAGEN_PROGRESSED\", \"ACADAGEN_SCORE\", \"ACADAGEN_UPPER\", \"ACADAGEN_LOWER\", \"ACADAGEN_BAND\", \"TLEV_COHORT\", \"TLEV_PROGRESSED\", \"TLEV_SCORE\", \"TLEV_UPPER\", \"TLEV_LOWER\", \"TLEV_BAND\", \"OTHER_COHORT\", \"OTHER_PROGRESSED\", \"OTHER_SCORE\", \"OTHER_UPPER\", \"OTHER_LOWER\", \"OTHER_BAND\", \"DIS_PROGRESSED\", \"DIS_APPREN\", \"DIS_HE\", \"DIS_TOP3RD\", \"DIS_RUSSELL\", \"DIS_OXBRIDGE\", \"DIS_HTECH\"}),",
+                "    #\"Changed Type1\" = Table.TransformColumnTypes(#\"Replaced Value2\",{{\"OTHER_PROGRESSED\", Percentage.Type}}),",
+                "    #\"Removed Columns1\" = Table.RemoveColumns(#\"Changed Type1\",{\"ALL_APPREN\", \"ALL_HE\", \"ALL_TOP3RD\", \"ALL_HTECH\", \"ACADAGEN_COHORT\", \"ACADAGEN_PROGRESSED\", \"ACADAGEN_SCORE\", \"ACADAGEN_UPPER\", \"ACADAGEN_LOWER\", \"ACADAGEN_BAND\", \"TLEV_COHORT\", \"TLEV_PROGRESSED\", \"TLEV_SCORE\", \"TLEV_UPPER\", \"TLEV_LOWER\", \"TLEV_BAND\", \"OTHER_COHORT\", \"OTHER_PROGRESSED\", \"OTHER_SCORE\", \"OTHER_UPPER\", \"OTHER_LOWER\", \"OTHER_BAND\", \"DIS_PROGRESSED\", \"DIS_APPREN\", \"DIS_HE\", \"DIS_TOP3RD\", \"DIS_RUSSELL\", \"DIS_OXBRIDGE\", \"DIS_HTECH\"}),",
+                "    #\"Changed Type2\" = Table.TransformColumnTypes(#\"Removed Columns1\",{{\"ALL_OXBRIDGE\", Percentage.Type}, {\"ALL_RUSSELL\", Percentage.Type}, {\"ALL_PROGRESSED\", Percentage.Type}, {\"ALL_COHORT\", Int64.Type}}),",
+                "    #\"Renamed Columns\" = Table.RenameColumns(#\"Changed Type2\",{{\"ALL_COHORT\", \"All Students\"}, {\"ALL_PROGRESSED\", \"All Progressions\"}, {\"ALL_RUSSELL\", \"Progress to Russel Group\"}, {\"ALL_OXBRIDGE\", \"Progress to OXBRIDGE\"}}),",
+                "    #\"Replaced Value3\" = Table.ReplaceValue(#\"Renamed Columns\",null,0,Replacer.ReplaceValue,{\"Progress to Russel Group\"}),",
+                "    #\"Replaced Value4\" = Table.ReplaceValue(#\"Replaced Value3\",null,0,Replacer.ReplaceValue,{\"All Progressions\"}),",
+                "    #\"Replaced Value5\" = Table.ReplaceValue(#\"Replaced Value4\",null,0,Replacer.ReplaceValue,{\"Progress to OXBRIDGE\"}),",
+                "    #\"Changed Type3\" = Table.TransformColumnTypes(#\"Replaced Value5\",{{\"Progress to OXBRIDGE\", Percentage.Type}, {\"Progress to Russel Group\", Percentage.Type}, {\"All Progressions\", Percentage.Type}})",
+                "in",
+                "    #\"Changed Type3\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "School Information",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          },
+          {
+            "name": "__PBI_SemanticLinks",
+            "value": "[{\"LinkTarget\":{\"TableName\":\"Location Information\",\"TableItemName\":\"Location (clusters)\",\"ObjectType\":4},\"LinkType\":\"UsedInGroup\"}]"
+          }
+        ],
+        "columns": [
+          {
+            "name": "URN",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "__PBI_SemanticLinks",
+                "value": "[{\"LinkTarget\":{\"TableName\":\"Location Information\",\"TableItemName\":\"Location (clusters)\",\"ObjectType\":4},\"LinkType\":\"UsedInGroup\"}]"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "8f59b125-0749-4d13-92f2-7700674fcf6a",
+            "sourceColumn": "URN",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "School",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "20299899-5511-461a-af92-893f830826e0",
+            "sourceColumn": "School",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "LA Code",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "string",
+            "isHidden": true,
+            "lineageTag": "8a331b29-5034-488a-a301-4e0cc75edc28",
+            "sourceColumn": "LA Code",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Postcode",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataCategory": "PostalCode",
+            "dataType": "string",
+            "isHidden": true,
+            "lineageTag": "0ed9bcc5-2acf-4414-bc8c-036a84c0efc4",
+            "sourceColumn": "Postcode",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Ofsted Rating",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "0148e948-90da-436a-b599-5e55f185573d",
+            "sourceColumn": "Ofsted Rating",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Last Ofsted Visit",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              },
+              {
+                "name": "__PBI_SemanticLinks",
+                "value": "[{\"LinkTarget\":{\"TableName\":\"School Information\",\"TableItemName\":\"Last Ofsted Visit (bins)\",\"ObjectType\":4},\"LinkType\":\"UsedInGroup\"},{\"LinkTarget\":{\"TableName\":\"Location Information\",\"TableItemName\":\"Location (clusters)\",\"ObjectType\":4},\"LinkType\":\"UsedInGroup\"}]"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "mmmm yyyy",
+            "lineageTag": "bea28f88-e1dc-4d7f-9235-fa58bb4933cc",
+            "sourceColumn": "Last Ofsted Visit",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Last Ofsted Visit (bins)",
+            "annotations": [
+              {
+                "name": "GroupingDesignState",
+                "value": "{\"Version\":0,\"Sources\":[{\"Name\":\"s\",\"Entity\":\"School Information\"}],\"GroupedColumns\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Last Ofsted Visit\"}}],\"BinItem\":{\"Expression\":{\"Floor\":{\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Last Ofsted Visit\"}},\"Size\":6.0,\"TimeUnit\":2}}}}"
+              },
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              }
+            ],
+            "dataType": "dateTime",
+            "expression": [
+              "IF(",
+              "\tISBLANK('School Information'[Last Ofsted Visit]),",
+              "\tBLANK(),",
+              "\tDATE(",
+              "\t\tYEAR('School Information'[Last Ofsted Visit]),",
+              "\t\t1 + (INT((MONTH('School Information'[Last Ofsted Visit]) - 1) / 6.0) * 6.0),",
+              "\t\t1",
+              "\t)",
+              ")"
+            ],
+            "extendedProperties": [
+              {
+                "name": "GroupingMetadata",
+                "type": "json",
+                "value": {
+                  "binningMetadata": {
+                    "binSize": {
+                      "unit": 6,
+                      "value": 6.0
+                    }
+                  },
+                  "groupedColumns": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "School Information"
+                          }
+                        },
+                        "Property": "Last Ofsted Visit"
+                      }
+                    }
+                  ],
+                  "version": 0
+                }
+              }
+            ],
+            "formatString": "mmmm yyyy",
+            "isDataTypeInferred": true,
+            "lineageTag": "0b8682a8-4195-45f9-b4ea-61a3cb6d91f3",
+            "summarizeBy": "none",
+            "type": "calculated"
+          }
+        ],
+        "lineageTag": "bd6d882f-b5e6-43fe-8006-0e7656f2f645",
+        "measures": [
+          {
+            "name": "School Count",
+            "expression": "COUNT('School Information'[URN])",
+            "formatString": "0",
+            "lineageTag": "6408792b-b875-430a-b142-578a39682717"
+          },
+          {
+            "name": "Recent Ofsted Visit",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              }
+            ],
+            "expression": "Max('School Information'[Last Ofsted Visit])",
+            "formatString": "dd/mm/yy",
+            "lineageTag": "d5cf667b-c3d6-4cba-8eeb-f3851fddf638"
+          },
+          {
+            "name": "Ofsted Visit Count",
+            "expression": "COUNT('School Information'[Last Ofsted Visit])",
+            "formatString": "0",
+            "lineageTag": "29947ceb-fd08-41dc-9cf9-da3cb4d3f219"
+          },
+          {
+            "name": "Visit per School",
+            "expression": "[Ofsted Visit Count]/'School Information'[School Count]",
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "39902451-2b85-4caf-b95b-e614510baadb"
+          },
+          {
+            "name": "Earliest Ofsted Visit",
+            "annotations": [
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isDateTimeCustom\":true}"
+              }
+            ],
+            "expression": "min('School Information'[Last Ofsted Visit])",
+            "formatString": "dd/mm/yy",
+            "lineageTag": "6dac7cb6-27bf-4648-841e-07e2f7cee383"
+          },
+          {
+            "name": "Measure",
+            "expression": "CALCULATE(sch)",
+            "lineageTag": "185caf3f-46b9-4be3-ac6c-ec67064550cf"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "School Information",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Sql.Databases(\"localhost\\SQLEXPRESS\"),",
+                "    a_levels_study_db = Source{[Name=\"a_levels_study_db\"]}[Data],",
+                "    dbo_s_england_school_information = a_levels_study_db{[Schema=\"dbo\",Item=\"s_england_school_information\"]}[Data],",
+                "    #\"Removed Columns\" = Table.RemoveColumns(dbo_s_england_school_information,{\"LANAME\"}),",
+                "    #\"Renamed Columns\" = Table.RenameColumns(#\"Removed Columns\",{{\"LA\", \"LA CODE\"}}),",
+                "    #\"Removed Columns1\" = Table.RemoveColumns(#\"Renamed Columns\",{\"ESTAB\", \"LAESTAB\"}),",
+                "    #\"Reordered Columns\" = Table.ReorderColumns(#\"Removed Columns1\",{\"URN\", \"SCHNAME\", \"LA CODE\", \"STREET\", \"LOCALITY\", \"ADDRESS3\", \"TOWN\", \"POSTCODE\", \"SCHSTATUS\", \"CLOSEDATE\", \"MINORGROUP\", \"SCHOOLTYPE\", \"ISPRIMARY\", \"ISSECONDARY\", \"ISPOST16\", \"AGELOW\", \"AGEHIGH\", \"GENDER\", \"RELCHAR\", \"ADMPOL\", \"OFSTEDRATING\", \"OFSTEDLASTINSP\"}),",
+                "    #\"Removed Columns2\" = Table.RemoveColumns(#\"Reordered Columns\",{\"STREET\", \"LOCALITY\", \"ADDRESS3\", \"TOWN\"}),",
+                "    #\"Filtered Rows\" = Table.SelectRows(#\"Removed Columns2\", each ([SCHSTATUS] <> \"Closed\")),",
+                "    #\"Removed Columns3\" = Table.RemoveColumns(#\"Filtered Rows\",{\"CLOSEDATE\", \"ISPRIMARY\", \"ISSECONDARY\"}),",
+                "    #\"Filtered Rows1\" = Table.SelectRows(#\"Removed Columns3\", each ([ISPOST16] = \"1\")),",
+                "    #\"Removed Columns4\" = Table.RemoveColumns(#\"Filtered Rows1\",{\"SCHSTATUS\", \"MINORGROUP\", \"SCHOOLTYPE\", \"ISPOST16\", \"AGELOW\", \"AGEHIGH\", \"GENDER\", \"RELCHAR\", \"ADMPOL\"}),",
+                "    #\"Renamed Columns1\" = Table.RenameColumns(#\"Removed Columns4\",{{\"SCHNAME\", \"School\"}, {\"LA CODE\", \"LA Code\"}, {\"POSTCODE\", \"Postcode\"}, {\"OFSTEDRATING\", \"Ofsted Rating\"}, {\"OFSTEDLASTINSP\", \"Last Ofsted Visit\"}}),",
+                "    #\"Replaced Value\" = Table.ReplaceValue(#\"Renamed Columns1\",null,\"No Rating\",Replacer.ReplaceValue,{\"Ofsted Rating\"}),",
+                "    #\"Filtered Rows2\" = Table.SelectRows(#\"Replaced Value\", each [Postcode] <> null and [Postcode] <> \"\")",
+                "in",
+                "    #\"Filtered Rows2\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Region Results",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Region Name",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataCategory": "Uncategorized",
+            "dataType": "string",
+            "lineageTag": "23b7a1f1-b4ad-45b1-b5b2-a17cbbb24328",
+            "sourceColumn": "Region Name",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Location",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataCategory": "Place",
+            "dataType": "string",
+            "lineageTag": "0bfdb248-26bf-453d-abd5-685b5c742795",
+            "sourceColumn": "Location",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "LA CODE",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "8b185ccd-05ab-4c5e-8c75-d2a5ff3d18ab",
+            "sourceColumn": "LA CODE",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Entries",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "lineageTag": "7d029249-cfd9-4d63-bc14-3c1c3d855ee2",
+            "sourceColumn": "Entries",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "A Star or above",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "2835055f-4389-4357-ae30-39471c46c84b",
+            "sourceColumn": "A Star or above",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "A or above",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "d18b5f41-6b85-449d-aa1f-9562e73ca29c",
+            "sourceColumn": "A or above",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "B or above",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "841790c6-4954-46a9-b096-3c5defeb1262",
+            "sourceColumn": "B or above",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "C or above",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "ecdcd119-28e4-4f64-ad70-16389b5de596",
+            "sourceColumn": "C or above",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "D or above",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "78cb6d11-e8b2-48cd-b15f-b9fb03a04a5a",
+            "sourceColumn": "D or above",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "E or above",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "double",
+            "formatString": "0.00%;-0.00%;0.00%",
+            "lineageTag": "340266a1-84e6-4994-987c-c11321d5c5dc",
+            "sourceColumn": "E or above",
+            "summarizeBy": "none"
+          }
+        ],
+        "lineageTag": "4da7a517-61c5-4a9b-a62d-26d68c17252a",
+        "partitions": [
+          {
+            "name": "Region Results",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Sql.Databases(\"localhost\\SQLEXPRESS\"),",
+                "    a_levels_study_db = Source{[Name=\"a_levels_study_db\"]}[Data],",
+                "    #\"dbo_s_data-a-level-and-other-16-to-18-results\" = a_levels_study_db{[Schema=\"dbo\",Item=\"s_data-a-level-and-other-16-to-18-results\"]}[Data],",
+                "    #\"Changed Type\" = Table.TransformColumnTypes(#\"dbo_s_data-a-level-and-other-16-to-18-results\",{{\"new_la_code\", Int64.Type}}),",
+                "    #\"Filtered Rows\" = Table.SelectRows(#\"Changed Type\", each [old_la_code] <> null and [old_la_code] <> \"\"),",
+                "    #\"Changed Type1\" = Table.TransformColumnTypes(#\"Filtered Rows\",{{\"region_code\", Int64.Type}}),",
+                "    #\"Removed Columns\" = Table.RemoveColumns(#\"Changed Type1\",{\"new_la_code\"}),",
+                "    #\"Renamed Columns\" = Table.RenameColumns(#\"Removed Columns\",{{\"old_la_code\", \"LA CODE\"}}),",
+                "    #\"Removed Columns1\" = Table.RemoveColumns(#\"Renamed Columns\",{\"region_code\", \"country_name\", \"country_code\", \"time_period\", \"time_identifier\", \"subject_area\", \"qualification\", \"school_type\", \"subject_name\", \"geographic_level\"}),",
+                "    #\"Reordered Columns\" = Table.ReorderColumns(#\"Removed Columns1\",{\"region_name\", \"la_name\", \"LA CODE\", \"school_type_group\", \"entry_count\", \"perc_astar_grade_achieved\", \"perc_astar_a_grade_achieved\", \"perc_astar_b_grade_achieved\", \"perc_astar_c_grade_achieved\", \"perc_astar_d_grade_achieved\", \"perc_astar_e_grade_achieved\"}),",
+                "    #\"Removed Columns2\" = Table.RemoveColumns(#\"Reordered Columns\",{\"school_type_group\"}),",
+                "    #\"Renamed Columns1\" = Table.RenameColumns(#\"Removed Columns2\",{{\"region_name\", \"Region Name\"}, {\"la_name\", \"Location\"}, {\"entry_count\", \"Entries\"}, {\"perc_astar_grade_achieved\", \"A Star or above\"}, {\"perc_astar_a_grade_achieved\", \"A or above\"}, {\"perc_astar_b_grade_achieved\", \"B or above\"}, {\"perc_astar_c_grade_achieved\", \"C or above\"}, {\"perc_astar_d_grade_achieved\", \"D or above\"}, {\"perc_astar_e_grade_achieved\", \"E or above\"}}),",
+                "    #\"Divided Column\" = Table.TransformColumns(#\"Renamed Columns1\", {{\"A Star or above\", each _ / 100, type number}}),",
+                "    #\"Changed Type2\" = Table.TransformColumnTypes(#\"Divided Column\",{{\"A Star or above\", Percentage.Type}}),",
+                "    #\"Divided Column1\" = Table.TransformColumns(#\"Changed Type2\", {{\"A or above\", each _ / 100, type number}}),",
+                "    #\"Changed Type3\" = Table.TransformColumnTypes(#\"Divided Column1\",{{\"A or above\", Percentage.Type}, {\"B or above\", Percentage.Type}, {\"C or above\", Percentage.Type}, {\"D or above\", Percentage.Type}, {\"E or above\", Percentage.Type}}),",
+                "    #\"Divided Column2\" = Table.TransformColumns(#\"Changed Type3\", {{\"B or above\", each _ / 100, Percentage.Type}}),",
+                "    #\"Divided Column3\" = Table.TransformColumns(#\"Divided Column2\", {{\"C or above\", each _ / 100, Percentage.Type}}),",
+                "    #\"Divided Column4\" = Table.TransformColumns(#\"Divided Column3\", {{\"D or above\", each _ / 100, Percentage.Type}}),",
+                "    #\"Divided Column5\" = Table.TransformColumns(#\"Divided Column4\", {{\"E or above\", each _ / 100, Percentage.Type}}),",
+                "    #\"Sorted Rows\" = Table.Sort(#\"Divided Column5\",{{\"A Star or above\", Order.Descending}})",
+                "in",
+                "    #\"Sorted Rows\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Date",
+        "annotations": [
+          {
+            "name": "PBI_Id",
+            "value": "5b8fdc3dd3ad41a8b74a9257d3d17bc1"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Date",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "dateTime",
+            "formatString": "General Date",
+            "isDataTypeInferred": true,
+            "isKey": true,
+            "isNameInferred": true,
+            "lineageTag": "b7fdc4b1-2e23-4eca-9ea0-acf284dc5e25",
+            "sourceColumn": "[Date]",
+            "summarizeBy": "none",
+            "type": "calculatedTableColumn"
+          },
+          {
+            "name": "FY Year",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "expression": "\"FY\" & YEAR('Date'[Date])-IF(MONTH('Date'[Date])<4,1,0)",
+            "isDataTypeInferred": true,
+            "lineageTag": "c450df22-8d66-4c81-9a97-04860258ac76",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "FY Month",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "expression": "FORMAT('Date'[Date],\"YYYY mmm\")",
+            "isDataTypeInferred": true,
+            "lineageTag": "bb97b45d-9e00-41c0-bf70-7737e898b228",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Month key",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "int64",
+            "expression": "YEAR('Date'[Date])*100+MONTH('Date'[Date])",
+            "formatString": "0",
+            "isDataTypeInferred": true,
+            "lineageTag": "5ccddef5-3773-4dfe-a25c-98169c8bbdb4",
+            "summarizeBy": "sum",
+            "type": "calculated"
+          },
+          {
+            "name": "Quarter",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "expression": "\"FY\" & YEAR('Date'[Date]) & IF(MONTH('Date'[Date])<4,\"Q4\",IF(MONTH('Date'[Date])<7,\"Q1\",IF(MONTH('Date'[Date])<10,\"Q2\",\"Q3\")))",
+            "isDataTypeInferred": true,
+            "lineageTag": "592a7a08-f111-4bb5-bae5-c72bb35cfedf",
+            "summarizeBy": "none",
+            "type": "calculated"
+          }
+        ],
+        "dataCategory": "Time",
+        "lineageTag": "2f8cbbf8-1af9-4414-832d-ef394420f883",
+        "partitions": [
+          {
+            "name": "Date",
+            "mode": "import",
+            "source": {
+              "expression": "CALENDARAUTO(4)",
+              "type": "calculated"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Additional Information",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "URN",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "d38c210c-b943-43dc-bcd0-9453abc59223",
+            "sourceColumn": "URN",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "SCHSTATUS",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "string",
+            "isHidden": true,
+            "lineageTag": "0b482138-486d-44a7-933c-64d2aa4ed05b",
+            "sourceColumn": "SCHSTATUS",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Minor Group",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "ed58cdd8-301a-45a4-838a-a245b9d55f3f",
+            "sourceColumn": "Minor Group",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "School Type",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "b066de9d-8b46-4d88-945d-a9ee2a174394",
+            "sourceColumn": "School Type",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "ISPOST16",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "48b08f96-ca6d-46ef-9fdf-bb792c415384",
+            "sourceColumn": "ISPOST16",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Age Group",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "b60bb8d6-f62a-42aa-8a75-3b1ffd66531e",
+            "sourceColumn": "Age Group",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Gender",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "ecafe930-2475-47ea-9fc8-c8c369da47bd",
+            "sourceColumn": "Gender",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Associated With",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "8f3d573c-9c03-406a-9933-8b1e6cea8eaf",
+            "sourceColumn": "Associated With",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Admission Policy",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "__PBI_SemanticLinks",
+                "value": "[{\"LinkTarget\":{\"TableName\":\"Additional Information\",\"TableItemName\":\"Admission Policy (groups)\",\"ObjectType\":4},\"LinkType\":\"UsedInGroup\"}]"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "cde86327-56bd-4c4a-9445-ea36da17b4bb",
+            "sourceColumn": "Admission Policy",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Admission Policy (groups)",
+            "annotations": [
+              {
+                "name": "GroupingDesignState",
+                "value": "{\"Version\":0,\"Sources\":[{\"Name\":\"a\",\"Entity\":\"Additional Information\"}],\"GroupedColumns\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"a\"}},\"Property\":\"Admission Policy\"}}],\"GroupItems\":[{\"DisplayName\":\"(Blank)\",\"BlankDefaultPlaceholder\":true},{\"DisplayName\":\"Non-selective\",\"Expression\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"a\"}},\"Property\":\"Admission Policy\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Non-selective'\"}}]]}}},{\"DisplayName\":\"Selective\",\"Expression\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"a\"}},\"Property\":\"Admission Policy\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Selective'\"}}]]}}}]}"
+              },
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "expression": [
+              "SWITCH(",
+              "\tTRUE,",
+              "\tISBLANK('Additional Information'[Admission Policy]),",
+              "\t\"(Blank)\",",
+              "\t'Additional Information'[Admission Policy] IN {\"Non-selective\"},",
+              "\t\"Non-selective\",",
+              "\t'Additional Information'[Admission Policy] IN {\"Selective\"},",
+              "\t\"Selective\",",
+              "\t'Additional Information'[Admission Policy]",
+              ")"
+            ],
+            "extendedProperties": [
+              {
+                "name": "GroupingMetadata",
+                "type": "json",
+                "value": {
+                  "groupedColumns": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Additional Information"
+                          }
+                        },
+                        "Property": "Admission Policy"
+                      }
+                    }
+                  ],
+                  "version": 0
+                }
+              }
+            ],
+            "isDataTypeInferred": true,
+            "lineageTag": "01a21cb5-d81e-42c9-bcb6-24d39f939bbe",
+            "summarizeBy": "none",
+            "type": "calculated"
+          }
+        ],
+        "lineageTag": "91c878dd-51fd-46b4-b11e-7710ffa38495",
+        "partitions": [
+          {
+            "name": "Additional Information",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Table.NestedJoin(#\"Other Information\", {\"Postcode\"}, National_Statistics_Postcode_Lookup_UK, {\"Postcode 3\"}, \"National_Statistics_Postcode_Lookup_UK\", JoinKind.LeftOuter),",
+                "    #\"Expanded National_Statistics_Postcode_Lookup_UK\" = Table.ExpandTableColumn(Source, \"National_Statistics_Postcode_Lookup_UK\", {\"Postcode 3\", \"County Name\", \"Local Authority Name\", \"Ward Name\", \"Country Name\", \"Region Name\", \"Longitude\", \"Latitude\", \"Spatial Accuracy\", \"Last Uploaded\", \"Location\", \"Socrata ID\"}, {\"Postcode 3\", \"County Name\", \"Local Authority Name\", \"Ward Name\", \"Country Name\", \"Region Name\", \"Longitude\", \"Latitude\", \"Spatial Accuracy\", \"Last Uploaded\", \"Location.1\", \"Socrata ID\"}),",
+                "    #\"Reordered Columns\" = Table.ReorderColumns(#\"Expanded National_Statistics_Postcode_Lookup_UK\",{\"URN\", \"SCHSTATUS\", \"Minor Group\", \"School Type\", \"ISPOST16\", \"Age Group\", \"Gender\", \"Associated With\", \"Admission Policy\", \"Postcode\", \"Postcode 3\", \"Town\", \"LA Code\", \"Location\", \"County Name\", \"Local Authority Name\", \"Ward Name\", \"Country Name\", \"Region Name\", \"Longitude\", \"Latitude\", \"Spatial Accuracy\", \"Last Uploaded\", \"Location.1\", \"Socrata ID\"}),",
+                "    #\"Removed Columns\" = Table.RemoveColumns(#\"Reordered Columns\",{\"Postcode 3\", \"LA Code\", \"Country Name\", \"Spatial Accuracy\"}),",
+                "    #\"Renamed Columns\" = Table.RenameColumns(#\"Removed Columns\",{{\"Location.1\", \"Lat Long\"}}),",
+                "    #\"Removed Columns1\" = Table.RemoveColumns(#\"Renamed Columns\",{\"Socrata ID\", \"Postcode\", \"Town\", \"Location\", \"County Name\", \"Local Authority Name\", \"Ward Name\", \"Region Name\", \"Longitude\", \"Latitude\", \"Last Uploaded\", \"Lat Long\"}),",
+                "    #\"Replaced Value\" = Table.ReplaceValue(#\"Removed Columns1\",null,\"Not Provided\",Replacer.ReplaceValue,{\"Admission Policy\"})",
+                "in",
+                "    #\"Replaced Value\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "Location Information",
+        "annotations": [
+          {
+            "name": "PBI_NavigationStepName",
+            "value": "Navigation"
+          },
+          {
+            "name": "PBI_ResultType",
+            "value": "Table"
+          }
+        ],
+        "columns": [
+          {
+            "name": "URN",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "changedProperties": [
+              {
+                "property": "IsHidden"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isHidden": true,
+            "lineageTag": "f294a1e0-6cdf-4fdd-aa89-515cad6ac3b6",
+            "sourceColumn": "URN",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Region_Name",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "__PBI_SemanticLinks",
+                "value": "[{\"LinkTarget\":{\"TableName\":\"Location Information\",\"TableItemName\":\"Region_Name (groups)\",\"ObjectType\":4},\"LinkType\":\"UsedInGroup\"}]"
+              }
+            ],
+            "dataType": "string",
+            "lineageTag": "b117ce5d-bcd5-4468-81f1-d369b11f8ffd",
+            "sourceColumn": "Region_Name",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Location",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "__PBI_SemanticLinks",
+                "value": "[{\"LinkTarget\":{\"TableName\":\"Location Information\",\"TableItemName\":\"Location (clusters)\",\"ObjectType\":4},\"LinkType\":\"UsedInGroup\"}]"
+              }
+            ],
+            "dataCategory": "Place",
+            "dataType": "string",
+            "lineageTag": "44146a38-aaae-4dba-9b51-45ad68ad7d98",
+            "sourceColumn": "Location",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Local Authority or Borough",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataCategory": "Place",
+            "dataType": "string",
+            "lineageTag": "d11dcc57-9202-43e5-9d5b-e77d5c5cec49",
+            "sourceColumn": "Local Authority or Borough",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Ward_Name",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataCategory": "Place",
+            "dataType": "string",
+            "lineageTag": "079f7725-df58-42da-baeb-f932acbf08e4",
+            "sourceColumn": "Ward_Name",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Postcode",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataCategory": "PostalCode",
+            "dataType": "string",
+            "lineageTag": "e3539cd4-4d05-4b2d-be07-9db80d067405",
+            "sourceColumn": "Postcode",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Longitude",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataCategory": "Longitude",
+            "dataType": "double",
+            "lineageTag": "9a4ae98b-edca-495d-8949-1049b13f0927",
+            "sourceColumn": "Longitude",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Latitude",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "PBI_FormatHint",
+                "value": "{\"isGeneralNumber\":true}"
+              }
+            ],
+            "dataCategory": "Latitude",
+            "dataType": "double",
+            "lineageTag": "0b5b3c87-7187-4023-a205-9c975198495c",
+            "sourceColumn": "Latitude",
+            "summarizeBy": "sum"
+          },
+          {
+            "name": "Region_Name (groups)",
+            "annotations": [
+              {
+                "name": "GroupingDesignState",
+                "value": "{\"Version\":0,\"Sources\":[{\"Name\":\"l\",\"Entity\":\"Location Information\"}],\"GroupedColumns\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"l\"}},\"Property\":\"Region_Name\"}}],\"GroupItems\":[{\"DisplayName\":\"(Blank)\",\"BlankDefaultPlaceholder\":true},{\"DisplayName\":\"Midlands\",\"Expression\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"l\"}},\"Property\":\"Region_Name\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'East Midlands'\"}}],[{\"Literal\":{\"Value\":\"'East of England'\"}}],[{\"Literal\":{\"Value\":\"'West Midlands'\"}}],[{\"Literal\":{\"Value\":\"'Yorkshire and the Humber'\"}}]]}}},{\"DisplayName\":\"North\",\"Expression\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"l\"}},\"Property\":\"Region_Name\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'North East'\"}}],[{\"Literal\":{\"Value\":\"'North West'\"}}]]}}},{\"DisplayName\":\"South\",\"Expression\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"l\"}},\"Property\":\"Region_Name\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'London'\"}}],[{\"Literal\":{\"Value\":\"'South West'\"}}],[{\"Literal\":{\"Value\":\"'South East'\"}}]]}}},{\"DisplayName\":\"Other\"}]}"
+              },
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "__PBI_SemanticLinks",
+                "value": "[{\"LinkTarget\":{\"TableName\":\"Location Information\",\"TableItemName\":\"Region_Name (groups) (groups)\",\"ObjectType\":4},\"LinkType\":\"UsedInGroup\"}]"
+              }
+            ],
+            "dataType": "string",
+            "expression": [
+              "SWITCH(",
+              "\tTRUE,",
+              "\tISBLANK('Location Information'[Region_Name]),",
+              "\t\"(Blank)\",",
+              "\t'Location Information'[Region_Name] IN {\"East Midlands\",",
+              "\t\t\"East of England\",",
+              "\t\t\"West Midlands\",",
+              "\t\t\"Yorkshire and the Humber\"},",
+              "\t\"Midlands\",",
+              "\t'Location Information'[Region_Name] IN {\"North East\",",
+              "\t\t\"North West\"},",
+              "\t\"North\",",
+              "\t'Location Information'[Region_Name] IN {\"London\",",
+              "\t\t\"South West\",",
+              "\t\t\"South East\"},",
+              "\t\"South\",",
+              "\t\"Other\"",
+              ")"
+            ],
+            "extendedProperties": [
+              {
+                "name": "GroupingMetadata",
+                "type": "json",
+                "value": {
+                  "groupedColumns": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Location Information"
+                          }
+                        },
+                        "Property": "Region_Name"
+                      }
+                    }
+                  ],
+                  "version": 0
+                }
+              }
+            ],
+            "isDataTypeInferred": true,
+            "lineageTag": "540dc3a9-d927-4e82-9bf0-d8c01bf4fd7c",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Location (clusters)",
+            "annotations": [
+              {
+                "name": "GroupingDesignState",
+                "value": "{\"Version\":0,\"Sources\":[{\"Name\":\"l\",\"Entity\":\"Location Information\"}],\"GroupedColumns\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"l\"}},\"Property\":\"Location\"}}],\"PartitionTable\":{\"Definition\":{\"TableDefinition\":{\"Version\":2,\"From\":[{\"Name\":\"s\",\"Entity\":\"School Information\"},{\"Name\":\"l\",\"Entity\":\"Location Information\"}],\"Where\":[],\"OrderBy\":[],\"Select\":[{\"Column\":{\"Expression\":{\"TransformTableRef\":{\"Source\":\"output0\"}},\"Property\":\"Location Information.Location\"},\"Name\":\"Location Information.Location\"},{\"Column\":{\"Expression\":{\"TransformTableRef\":{\"Source\":\"output0\"}},\"Property\":\"clusterId\"},\"Name\":\"clusterId\"}],\"GroupBy\":[],\"Transform\":[{\"Name\":\"KMeansClustering\",\"Algorithm\":\"KMeansClustering\",\"Input\":{\"Parameters\":[{\"Literal\":{\"Value\":\"-1L\"},\"Name\":\"NumberOfClusters\"}],\"Table\":{\"Name\":\"input0\",\"Columns\":[{\"Role\":\"Attribute\",\"Expression\":{\"Aggregation\":{\"Function\":5,\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"Last Ofsted Visit\"}}},\"Name\":\"CountNonNull(School Information.Last Ofsted Visit)\"}},{\"Role\":\"Item\",\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"l\"}},\"Property\":\"Location\"},\"Name\":\"Location Information.Location\"}},{\"Role\":\"Attribute\",\"Expression\":{\"Aggregation\":{\"Function\":2,\"Expression\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"s\"}},\"Property\":\"URN\"}}},\"Name\":\"School Information.URN\"}}]}},\"Output\":{\"Table\":{\"Name\":\"output0\",\"Columns\":[{\"Expression\":{\"Column\":{\"Expression\":{\"TransformTableRef\":{\"Source\":\"input0\"}},\"Property\":\"Location Information.Location\"},\"Name\":\"Location Information.Location\"}},{\"Role\":\"Series\",\"Expression\":{\"TransformOutputRoleRef\":{\"Role\":\"ClusterId\"},\"Name\":\"clusterId\"}}]}}}]},\"ItemIdColumns\":[\"Location Information.Location\"],\"PartitionIdColumn\":\"clusterId\",\"Partitions\":[{\"PartitionIds\":[{\"Literal\":{\"Value\":\"null\"}}]}],\"DefaultPartitionPrefix\":\"Cluster\"},\"Result\":{\"TableName\":\"ClusterMappingTable\",\"PartitionIdColumn\":\"ClusterId\",\"ItemIdMappings\":[[{\"PartitionTableColumn\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"ClusterMappingTable\"}},\"Property\":\"Location\"}},\"SourceTableColumn\":{\"Column\":{\"Expression\":{\"SourceRef\":{\"Entity\":\"Location Information\"}},\"Property\":\"Location\"}}}]]}}}"
+              },
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "description": "Clusters for Location",
+            "expression": [
+              "VAR __ClusterValue = ",
+              "\tLOOKUPVALUE(",
+              "\t\t'ClusterMappingTable'[ClusterId],",
+              "\t\t'ClusterMappingTable'[Location],",
+              "\t\t'Location Information'[Location]",
+              "\t)",
+              "",
+              "RETURN",
+              "\tSWITCH(",
+              "\t\t__ClusterValue,",
+              "\t\tBLANK(),",
+              "\t\tBLANK(),",
+              "\t\tCONCATENATE(\"Cluster\", __ClusterValue)",
+              "\t)"
+            ],
+            "extendedProperties": [
+              {
+                "name": "GroupingMetadata",
+                "type": "json",
+                "value": {
+                  "groupedColumns": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Location Information"
+                          }
+                        },
+                        "Property": "Location"
+                      }
+                    }
+                  ],
+                  "version": 0
+                }
+              }
+            ],
+            "isDataTypeInferred": true,
+            "lineageTag": "c6472c6c-18cc-4895-9a85-493ebd094ada",
+            "summarizeBy": "none",
+            "type": "calculated"
+          },
+          {
+            "name": "Region_Name (groups) (groups)",
+            "annotations": [
+              {
+                "name": "GroupingDesignState",
+                "value": "{\"Version\":0,\"Sources\":[{\"Name\":\"l\",\"Entity\":\"Location Information\"}],\"GroupedColumns\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"l\"}},\"Property\":\"Region_Name (groups)\"}}],\"GroupItems\":[{\"DisplayName\":\"(Blank)\",\"BlankDefaultPlaceholder\":true},{\"DisplayName\":\"Midlands & North & South\",\"Expression\":{\"In\":{\"Expressions\":[{\"Column\":{\"Expression\":{\"SourceRef\":{\"Source\":\"l\"}},\"Property\":\"Region_Name (groups)\"}}],\"Values\":[[{\"Literal\":{\"Value\":\"'Midlands'\"}}],[{\"Literal\":{\"Value\":\"'North'\"}}],[{\"Literal\":{\"Value\":\"'South'\"}}]]}}}]}"
+              },
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              }
+            ],
+            "dataType": "string",
+            "expression": [
+              "SWITCH(",
+              "\tTRUE,",
+              "\tISBLANK('Location Information'[Region_Name (groups)]),",
+              "\t\"(Blank)\",",
+              "\t'Location Information'[Region_Name (groups)] IN {\"Midlands\",",
+              "\t\t\"North\",",
+              "\t\t\"South\"},",
+              "\t\"Midlands & North & South\",",
+              "\t'Location Information'[Region_Name (groups)]",
+              ")"
+            ],
+            "extendedProperties": [
+              {
+                "name": "GroupingMetadata",
+                "type": "json",
+                "value": {
+                  "groupedColumns": [
+                    {
+                      "Column": {
+                        "Expression": {
+                          "SourceRef": {
+                            "Entity": "Location Information"
+                          }
+                        },
+                        "Property": "Region_Name (groups)"
+                      }
+                    }
+                  ],
+                  "version": 0
+                }
+              }
+            ],
+            "isDataTypeInferred": true,
+            "lineageTag": "20edc927-92c3-45f4-b727-3ff27d54020a",
+            "summarizeBy": "none",
+            "type": "calculated"
+          }
+        ],
+        "hierarchies": [
+          {
+            "name": "Region_Name Hierarchy",
+            "levels": [
+              {
+                "name": "Region_Name",
+                "column": "Region_Name",
+                "lineageTag": "7eb34a4b-6303-4680-b58c-1d5079c4abcb",
+                "ordinal": 0
+              },
+              {
+                "name": "Location",
+                "column": "Location",
+                "lineageTag": "72240242-6e4f-4551-a020-6c1a6e5f1d4b",
+                "ordinal": 1
+              },
+              {
+                "name": "Local Authority or Borough",
+                "column": "Local Authority or Borough",
+                "lineageTag": "ca511c3b-91ce-493e-b16a-5d13105bfff2",
+                "ordinal": 2
+              },
+              {
+                "name": "Ward_Name",
+                "column": "Ward_Name",
+                "lineageTag": "a046b163-2e4f-42ff-97d2-0374aa2ba7fb",
+                "ordinal": 3
+              },
+              {
+                "name": "Postcode",
+                "column": "Postcode",
+                "lineageTag": "dbd2ead5-ec99-4ca1-8a53-a322caef9264",
+                "ordinal": 4
+              }
+            ],
+            "lineageTag": "d130eb42-0406-4c38-b1bc-6152cbde7aeb"
+          }
+        ],
+        "lineageTag": "2123490e-9ad7-4438-990b-5bc67f276ba7",
+        "partitions": [
+          {
+            "name": "Location Information",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "let",
+                "    Source = Sql.Databases(\"localhost\\SQLEXPRESS\"),",
+                "    a_levels_study_db = Source{[Name=\"a_levels_study_db\"]}[Data],",
+                "    #\"dbo_location information exported from PowerBI\" = a_levels_study_db{[Schema=\"dbo\",Item=\"location information exported from PowerBI\"]}[Data],",
+                "    #\"Removed Columns\" = Table.RemoveColumns(#\"dbo_location information exported from PowerBI\",{\"Lat_Long\"}),",
+                "    #\"Renamed Columns\" = Table.RenameColumns(#\"Removed Columns\",{{\"Local_Authority_Name\", \"Local Authority or Borough\"}})",
+                "in",
+                "    #\"Renamed Columns\""
+              ],
+              "type": "m"
+            }
+          }
+        ]
+      },
+      {
+        "name": "ClusterMappingTable",
+        "annotations": [
+          {
+            "name": "ClusterMappingTable",
+            "value": "true"
+          },
+          {
+            "name": "__PBI_SemanticLinks",
+            "value": "[{\"LinkTarget\":{\"TableName\":\"Location Information\",\"TableItemName\":\"Location (clusters)\",\"ObjectType\":4},\"LinkType\":\"UsedInGroup\"}]"
+          }
+        ],
+        "columns": [
+          {
+            "name": "Location",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "__PBI_SemanticLinks",
+                "value": "[{\"LinkTarget\":{\"TableName\":\"Location Information\",\"TableItemName\":\"Location (clusters)\",\"ObjectType\":4},\"LinkType\":\"UsedInGroup\"}]"
+              }
+            ],
+            "dataType": "string",
+            "isDataTypeInferred": true,
+            "isNameInferred": true,
+            "lineageTag": "740d826d-3dd6-400e-885b-7324dbcd4f7e",
+            "sourceColumn": "[Location]",
+            "summarizeBy": "none",
+            "type": "calculatedTableColumn"
+          },
+          {
+            "name": "ClusterId",
+            "annotations": [
+              {
+                "name": "SummarizationSetBy",
+                "value": "Automatic"
+              },
+              {
+                "name": "__PBI_SemanticLinks",
+                "value": "[{\"LinkTarget\":{\"TableName\":\"Location Information\",\"TableItemName\":\"Location (clusters)\",\"ObjectType\":4},\"LinkType\":\"UsedInGroup\"}]"
+              }
+            ],
+            "dataType": "int64",
+            "formatString": "0",
+            "isDataTypeInferred": true,
+            "isNameInferred": true,
+            "lineageTag": "c27b9d4b-07e0-49b8-a287-0a6a25b17b62",
+            "sourceColumn": "[ClusterId]",
+            "summarizeBy": "count",
+            "type": "calculatedTableColumn"
+          }
+        ],
+        "isHidden": true,
+        "isPrivate": true,
+        "lineageTag": "a182d794-5bfd-4420-bc36-08e703f68fa8",
+        "partitions": [
+          {
+            "name": "ClusterMappingTable",
+            "mode": "import",
+            "source": {
+              "expression": [
+                "VAR __DS0Core = ",
+                "\tSUMMARIZECOLUMNS(",
+                "\t\t'Location Information'[Location],",
+                "\t\t\"CountLast_Ofsted_Visit\", CALCULATE(COUNTA('School Information'[Last Ofsted Visit])),",
+                "\t\t\"DistinctCountURN\", CALCULATE(DISTINCTCOUNT('School Information'[URN]))",
+                "\t)",
+                "",
+                "VAR __DataTransformT0 = ",
+                "\tKMeansClustering(",
+                "\t\tSELECTCOLUMNS(",
+                "\t\t\t__DS0Core,",
+                "\t\t\t\"Location\", 'Location Information'[Location],",
+                "\t\t\t\"CountLast_Ofsted_Visit\", [CountLast_Ofsted_Visit],",
+                "\t\t\t\"DistinctCountURN\", [DistinctCountURN]",
+                "\t\t),",
+                "\t\t{(\"[CountLast_Ofsted_Visit]\", \"Attribute\"),",
+                "\t\t\t(\"[Location]\", \"Item\"),",
+                "\t\t\t(\"[DistinctCountURN]\", \"Attribute\")},",
+                "\t\t{(\"[Location]\", BLANK()),",
+                "\t\t\t(\"ClusterId\", \"ClusterId\")},",
+                "\t\t-1",
+                "\t)",
+                "",
+                "RETURN __DataTransformT0"
+              ],
+              "retainDataTillForceCalculate": true,
+              "type": "calculated"
+            }
+          }
+        ]
+      }
+    ]
+  }
+}
