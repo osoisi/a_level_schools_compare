@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "SemanticModel",
+    "displayName": "A_levels School Choice Project"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "cde8f1ff-65fe-4479-b1fb-1d3d7ce9d9dd"
+  }
+}

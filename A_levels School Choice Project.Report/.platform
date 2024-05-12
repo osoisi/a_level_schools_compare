@@ -1,0 +1,11 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/gitIntegration/platformProperties/2.0.0/schema.json",
+  "metadata": {
+    "type": "Report",
+    "displayName": "A_levels School Choice Project"
+  },
+  "config": {
+    "version": "2.0",
+    "logicalId": "4491e7ca-3057-444a-b5cb-8bfccfb0721e"
+  }
+}
