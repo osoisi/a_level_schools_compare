@@ -1,0 +1,151 @@
+table 'School Inspections'
+	lineageTag: 5ab7ff0e-c745-46d7-9f86-dd41f4a65eff
+
+	column URN
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 3471a09c-91d4-41c4-9d15-35163cbd9d9b
+		summarizeBy: none
+		sourceColumn: URN
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Location ID'
+		dataType: string
+		isHidden
+		lineageTag: 016233d1-8425-4c53-a80c-e5d6670edcfa
+		summarizeBy: none
+		sourceColumn: Location ID
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'OFSTED Inspection'
+		dataType: dateTime
+		formatString: Long Date
+		lineageTag: 80bff283-c04d-42c4-bd08-749145a5f401
+		summarizeBy: none
+		sourceColumn: OFSTED Inspection
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column 'Admission Policy ID'
+		dataType: int64
+		isHidden
+		lineageTag: ff26a325-d9ad-413c-9b56-8893e0aa78b7
+		summarizeBy: none
+		sourceColumn: Admission Policy ID
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column 'Association ID'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 235dee66-dc71-428a-9948-b48146a3b84e
+		summarizeBy: none
+		sourceColumn: Association ID
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Postcode
+		dataType: string
+		lineageTag: 4d52c3f1-93be-470b-ac18-6277d96c97bd
+		dataCategory: PostalCode
+		summarizeBy: none
+		sourceColumn: Postcode
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'School Type ID'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 7b573315-60fb-4291-bfdc-6487ce2d2e8c
+		summarizeBy: none
+		sourceColumn: School Type ID
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column SCHNAME
+		dataType: string
+		lineageTag: 08fb4d84-4ca5-463f-9a9b-83f21a281361
+		summarizeBy: none
+		sourceColumn: SCHNAME
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'OFSTED Grade ID'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 49342937-6f76-4c62-a85c-8909a356ac2c
+		summarizeBy: none
+		sourceColumn: OFSTED Grade ID
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rating
+		dataType: string
+		lineageTag: e4246f87-c523-4a23-ab39-682667842378
+		summarizeBy: none
+		sourceColumn: Rating
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'School Inspections' = m
+		mode: import
+		queryGroup: TestFunction
+		source =
+				let
+				    Source = Sql.Databases("localhost\SQLEXPRESS"),
+				    a_levels_study_db = Source{[Name="a_levels_study_db"]}[Data],
+				    dbo_factSchoolInspections = a_levels_study_db{[Schema="dbo",Item="factSchoolInspections"]}[Data],
+				    #"Merged Queries" = Table.NestedJoin(dbo_factSchoolInspections, {"URN"}, AdmissionPolicyExtended, {"URN"}, "AdmissionPolicyExtended", JoinKind.LeftOuter),
+				    #"Expanded AdmissionPolicyExtended" = Table.ExpandTableColumn(#"Merged Queries", "AdmissionPolicyExtended", {"Index"}, {"Index"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Expanded AdmissionPolicyExtended",{{"Index", "Admission Policy ID"}}),
+				    #"Merged Queries1" = Table.NestedJoin(#"Renamed Columns", {"URN"}, dimCharterBody, {"URN"}, "dimCharterBody", JoinKind.LeftOuter),
+				    #"Expanded dimCharterBody" = Table.ExpandTableColumn(#"Merged Queries1", "dimCharterBody", {"BodyID"}, {"BodyID"}),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Expanded dimCharterBody",{{"BodyID", "Relchar ID"}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Renamed Columns1",null,3,Replacer.ReplaceValue,{"Admission Policy ID"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Replaced Value",{{"OFSTEDLASTINSP", type date}}),
+				    #"Merged Queries2" = Table.NestedJoin(#"Changed Type", {"URN"}, dimSchoolTypes, {"URN"}, "dimSchoolTypes", JoinKind.LeftOuter),
+				    #"Expanded dimSchoolTypes" = Table.ExpandTableColumn(#"Merged Queries2", "dimSchoolTypes", {"Type ID"}, {"Type ID"}),
+				    #"Renamed Columns2" = Table.RenameColumns(#"Expanded dimSchoolTypes",{{"Type ID", "School Type ID"}}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Renamed Columns2",{{"Admission Policy ID", Int64.Type}}),
+				    #"Renamed Columns3" = Table.RenameColumns(#"Changed Type1",{{"OFSTEDRATING", "OFSTED Rating"}, {"OFSTEDLASTINSP", "OFSTED Inspection"}, {"Relchar ID", "Association ID"}, {"POSTCODE", "Postcode"}, {"LocationCode", "Location ID"}}),
+				    #"Added Conditional Column" = Table.AddColumn(#"Renamed Columns3", "Custom", each if [OFSTED Rating] = "Good" then 80 else if [OFSTED Rating] = "Outstanding" then 100 else if [OFSTED Rating] = "Requires improvement" then 60 else if [OFSTED Rating] = "Inadequate" then 40 else if [OFSTED Rating] = "Serious Weakness" then 20 else if [OFSTED Rating] = "Special Measures" then 10 else if [OFSTED Rating] = "Insufficient evidence" then 0 else if [OFSTED Rating] = "Serious Weaknesses" then 5 else null),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Added Conditional Column",{"URN", "Location ID", "Postcode", "OFSTED Rating", "Custom", "OFSTED Inspection", "Admission Policy ID", "Association ID", "School Type ID"}),
+				    #"Renamed Columns4" = Table.RenameColumns(#"Reordered Columns",{{"Custom", "Rating Grade"}}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Renamed Columns4",{"URN", "Location ID", "SCHNAME", "Postcode", "OFSTED Rating", "Rating Grade", "OFSTED Inspection", "Admission Policy ID", "Association ID", "School Type ID"}),
+				    #"Merged Queries3" = Table.NestedJoin(#"Removed Other Columns", {"OFSTED Rating"}, #"OFSTED Rating", {"Rating"}, "OFSTED Rating.1", JoinKind.LeftOuter),
+				    #"Expanded OFSTED Rating.1" = Table.ExpandTableColumn(#"Merged Queries3", "OFSTED Rating.1", {"Index", "Rating"}, {"Index", "Rating"}),
+				    #"Renamed Columns5" = Table.RenameColumns(#"Expanded OFSTED Rating.1",{{"Index", "OFSTED Grade ID"}}),
+				    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns5",{"URN", "Location ID", "SCHNAME", "Postcode", "OFSTED Inspection", "Admission Policy ID", "Association ID", "School Type ID", "OFSTED Grade ID", "Rating"}),
+				    #"Reordered Columns1" = Table.ReorderColumns(#"Removed Other Columns1",{"URN", "Location ID", "SCHNAME", "Postcode", "OFSTED Grade ID", "Rating", "OFSTED Inspection", "Admission Policy ID", "Association ID", "School Type ID"}),
+				    #"Filtered Rows" = Table.SelectRows(#"Reordered Columns1", each [OFSTED Inspection] >= #"Start Date" and [OFSTED Inspection] <= #"End Date")
+				in
+				    #"Filtered Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

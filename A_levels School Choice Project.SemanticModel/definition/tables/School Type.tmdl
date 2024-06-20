@@ -1,0 +1,71 @@
+table 'School Type'
+	lineageTag: e449b6b6-d66d-4519-925f-456731b57da0
+
+	column 'Type ID'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: cac133ba-2da2-42f9-b4f8-de53bec41305
+		summarizeBy: none
+		sourceColumn: Type ID
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'School Type'
+		dataType: string
+		lineageTag: 7f66223b-3b86-41c5-a294-b91b606851ed
+		summarizeBy: none
+		sourceColumn: School Type
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'School Type Group'
+		dataType: string
+		lineageTag: db93f060-67c7-465f-a8a2-bb9f360b7cc9
+		summarizeBy: none
+		sourceColumn: School Type Group
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Average Age (Low)'
+		dataType: int64
+		formatString: 0
+		lineageTag: a4de953e-bc8d-4ce8-b2b3-4d59704738f6
+		summarizeBy: none
+		sourceColumn: Average Age (Low)
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Average Age (High)'
+		dataType: int64
+		formatString: 0
+		lineageTag: 035f9bbe-c070-44f1-bead-de3a09cd3d55
+		summarizeBy: none
+		sourceColumn: Average Age (High)
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'School Type' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost\SQLEXPRESS"),
+				    a_levels_study_db = Source{[Name="a_levels_study_db"]}[Data],
+				    dbo_dimSchoolTypes = a_levels_study_db{[Schema="dbo",Item="dimSchoolTypes"]}[Data],
+				    #"Grouped Rows" = Table.Group(dbo_dimSchoolTypes, {"SCHOOLTYPE"}, {{"Average Age (Low)", each List.Average([AGELOW]), type nullable text}, {"Average Age (High)", each List.Average([AGEHIGH]), type nullable text}}),
+				    #"Added Index" = Table.AddIndexColumn(#"Grouped Rows", "Index", 1, 1, Int64.Type),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Added Index",{"Index", "SCHOOLTYPE", "Average Age (Low)", "Average Age (High)"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Reordered Columns",{{"Index", "Type ID"}, {"SCHOOLTYPE", "School Type"}}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Renamed Columns",{{"Average Age (Low)", Int64.Type}, {"Average Age (High)", Int64.Type}}),
+				    #"Added Conditional Column" = Table.AddColumn(#"Changed Type", "School Type Group", each if Text.Contains([School Type], "Academy") then "Academy School" else if Text.Contains([School Type], "Special") then "Special School" else if Text.Contains([School Type], "Independent") then "Independent School" else if Text.Contains([School Type], "Foundation") then "Foundation School" else if Text.Contains([School Type], "Further") then "Further Education" else "Other School Type"),
+				    #"Reordered Columns1" = Table.ReorderColumns(#"Added Conditional Column",{"Type ID", "School Type", "School Type Group", "Average Age (Low)", "Average Age (High)"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Reordered Columns1",{{"Type ID", Int64.Type}, {"School Type Group", type text}, {"Average Age (Low)", Int64.Type}, {"Average Age (High)", Int64.Type}})
+				in
+				    #"Changed Type1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

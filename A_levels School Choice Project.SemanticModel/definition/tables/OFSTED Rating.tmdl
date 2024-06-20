@@ -1,0 +1,61 @@
+table 'OFSTED Rating'
+	lineageTag: 8205860b-6a61-480e-b606-7a30210a71cb
+
+	column Index
+		dataType: int64
+		formatString: 0
+		lineageTag: 2bd71419-ae55-40c2-9457-37eba28a1965
+		summarizeBy: none
+		sourceColumn: Index
+
+		annotation SummarizationSetBy = Automatic
+
+	column Rating
+		dataType: string
+		lineageTag: e01bbd65-b55f-4b1d-915c-c1b8677ef852
+		summarizeBy: none
+		sourceColumn: Rating
+		sortByColumn: 'Rating Grade'
+
+		changedProperty = SortByColumn
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Rating Grade'
+		dataType: string
+		lineageTag: d31adc5c-ce63-4b3e-a286-42bd1f081fdd
+		summarizeBy: none
+		sourceColumn: Rating Grade
+
+		annotation SummarizationSetBy = Automatic
+
+	partition 'OFSTED Rating' = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost\SQLEXPRESS"),
+				    a_levels_study_db = Source{[Name="a_levels_study_db"]}[Data],
+				    dbo_factSchoolInspections = a_levels_study_db{[Schema="dbo",Item="factSchoolInspections"]}[Data],
+				    #"Merged Queries" = Table.NestedJoin(dbo_factSchoolInspections, {"URN"}, AdmissionPolicyExtended, {"URN"}, "AdmissionPolicyExtended", JoinKind.LeftOuter),
+				    #"Expanded AdmissionPolicyExtended" = Table.ExpandTableColumn(#"Merged Queries", "AdmissionPolicyExtended", {"Index"}, {"Index"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Expanded AdmissionPolicyExtended",{{"Index", "Admission Policy ID"}}),
+				    #"Merged Queries1" = Table.NestedJoin(#"Renamed Columns", {"URN"}, dimCharterBody, {"URN"}, "dimCharterBody", JoinKind.LeftOuter),
+				    #"Expanded dimCharterBody" = Table.ExpandTableColumn(#"Merged Queries1", "dimCharterBody", {"BodyID"}, {"BodyID"}),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Expanded dimCharterBody",{{"BodyID", "Relchar ID"}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Renamed Columns1",null,3,Replacer.ReplaceValue,{"Admission Policy ID"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Replaced Value",{{"OFSTEDLASTINSP", type date}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"SCHNAME", "TOWN", "POSTCODE"}),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Removed Columns",{"OFSTEDRATING"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Other Columns"),
+				    #"Added Conditional Column" = Table.AddColumn(#"Removed Duplicates", "OFSTED Rating Grade", each if [OFSTEDRATING] = "Good" then 80 else if Text.Contains([OFSTEDRATING], "Requires") then 60 else if Text.Contains([OFSTEDRATING], "Out") then 100 else if Text.Contains([OFSTEDRATING], "Speci") then 20 else if Text.Contains([OFSTEDRATING], "Inad") then 40 else if Text.Contains([OFSTEDRATING], "Serio") then 10 else if Text.Contains([OFSTEDRATING], "Insuf") then 0 else null),
+				    #"Sorted Rows" = Table.Sort(#"Added Conditional Column",{{"OFSTED Rating Grade", Order.Descending}}),
+				    #"Added Index" = Table.AddIndexColumn(#"Sorted Rows", "Index", 1, 1, Int64.Type),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Added Index",{"Index", "OFSTEDRATING", "OFSTED Rating Grade"}),
+				    #"Renamed Columns2" = Table.RenameColumns(#"Reordered Columns",{{"OFSTEDRATING", "Rating"}, {"OFSTED Rating Grade", "Rating Grade"}})
+				in
+				    #"Renamed Columns2"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

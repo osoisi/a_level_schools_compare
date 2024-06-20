@@ -1,0 +1,32 @@
+model Model
+	culture: en-GB
+	defaultPowerBIDataSourceVersion: powerBI_V3
+	sourceQueryCulture: en-GB
+	dataAccessOptions
+		legacyRedirects
+		returnErrorValuesAsNull
+
+queryGroup TestFunction
+
+	annotation PBI_QueryGroupOrder = 0
+
+annotation __PBI_TimeIntelligenceEnabled = 0
+
+annotation PBIDesktopVersion = 2.129.905.0 (24.05)
+
+annotation PBI_QueryOrder = ["School Inspections","England postcodes","Associations","AdmissionPolicy","School Type","Progressions","Measure Table","OFSTED Rating","Schools for Manual Location Checks csv","Locations","AdmissionPolicyExtended","dimAdmissionPolicytest","dimCharterBody","dimSchoolTypes","factSchoolInspections","Start Date","End Date","TestFunction"]
+
+annotation PBI_ProTooling = ["DevMode"]
+
+ref table 'School Inspections'
+ref table Associations
+ref table AdmissionPolicy
+ref table 'School Type'
+ref table 'England postcodes'
+ref table Progressions
+ref table 'Measure Table'
+ref table Date
+ref table 'OFSTED Rating'
+
+ref cultureInfo en-GB
+

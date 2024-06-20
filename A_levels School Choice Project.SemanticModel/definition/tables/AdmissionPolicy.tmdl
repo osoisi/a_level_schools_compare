@@ -1,0 +1,45 @@
+table AdmissionPolicy
+	lineageTag: 55fc6b1c-48c8-466e-b20d-de4e7c2a0e3f
+
+	column Index
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: df828223-37a6-4059-b72b-cbca229d7eb9
+		summarizeBy: none
+		sourceColumn: Index
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Policy Name'
+		dataType: string
+		lineageTag: 4d7b0b92-b79b-479f-a347-eccff7135401
+		summarizeBy: none
+		sourceColumn: Policy Name
+
+		annotation SummarizationSetBy = Automatic
+
+	partition AdmissionPolicy = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost\SQLEXPRESS"),
+				    a_levels_study_db = Source{[Name="a_levels_study_db"]}[Data],
+				    dbo_dimAdmissionPolicytest = a_levels_study_db{[Schema="dbo",Item="dimAdmissionPolicytest"]}[Data],
+				    #"Removed Columns" = Table.RemoveColumns(dbo_dimAdmissionPolicytest,{"URN"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Removed Columns"),
+				    #"Added Index" = Table.AddIndexColumn(#"Removed Duplicates", "Index", 1, 1, Int64.Type),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Added Index",{"Index", "ADMPOL"}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Reordered Columns",null,"Not applicable",Replacer.ReplaceValue,{"ADMPOL"}),
+				    #"Removed Duplicates1" = Table.Distinct(#"Replaced Value", {"ADMPOL"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Duplicates1",{{"ADMPOL", "Policy Name"}}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Renamed Columns","Not applicable","None",Replacer.ReplaceText,{"Policy Name"})
+				in
+				    #"Replaced Value1"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

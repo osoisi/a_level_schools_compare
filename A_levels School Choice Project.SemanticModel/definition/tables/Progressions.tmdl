@@ -1,0 +1,76 @@
+table Progressions
+	lineageTag: 7fe16cae-5147-415b-8872-bada048ea2a5
+
+	column URN
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 597c52d9-72f1-4e36-af86-a0a95ba4c19a
+		summarizeBy: none
+		sourceColumn: URN
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'All Progressions'
+		dataType: double
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 6f066753-72a6-40f3-9f02-0f00b305dd0c
+		summarizeBy: sum
+		sourceColumn: All Progressions
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Higher Education'
+		dataType: double
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: a2ecd41b-21f0-4c04-8f3e-ff9c88222e46
+		summarizeBy: sum
+		sourceColumn: Higher Education
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Russell Group University'
+		dataType: double
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 2fc30ccf-f386-408d-9568-125548639b16
+		summarizeBy: sum
+		sourceColumn: Russell Group University
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Oxford or Cambridge'
+		dataType: double
+		formatString: 0.00%;-0.00%;0.00%
+		lineageTag: 2a3355c8-e96b-4c2b-ad44-01ef6f178f51
+		summarizeBy: sum
+		sourceColumn: Oxford or Cambridge
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Progressions = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost\SQLEXPRESS"),
+				    a_levels_study_db = Source{[Name="a_levels_study_db"]}[Data],
+				    dbo_dimHigherEducation = a_levels_study_db{[Schema="dbo",Item="dimHigherEducation"]}[Data],
+				    #"Replaced Value" = Table.ReplaceValue(dbo_dimHigherEducation,"SUPP","",Replacer.ReplaceText,{"ALL_PROGRESSED"}),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Replaced Value",{{"ALL_PROGRESSED", Percentage.Type}}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Changed Type","SUPP","",Replacer.ReplaceText,{"ALL_HE"}),
+				    #"Changed Type1" = Table.TransformColumnTypes(#"Replaced Value1",{{"ALL_HE", Percentage.Type}}),
+				    #"Replaced Value2" = Table.ReplaceValue(#"Changed Type1","SUPP","",Replacer.ReplaceText,{"ALL_RUSSELL"}),
+				    #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2","SP","",Replacer.ReplaceText,{"ALL_RUSSELL"}),
+				    #"Changed Type2" = Table.TransformColumnTypes(#"Replaced Value3",{{"ALL_RUSSELL", Percentage.Type}}),
+				    #"Replaced Value4" = Table.ReplaceValue(#"Changed Type2","SP","",Replacer.ReplaceText,{"ALL_OXBRIDGE"}),
+				    #"Replaced Value5" = Table.ReplaceValue(#"Replaced Value4","SUPP","",Replacer.ReplaceText,{"ALL_OXBRIDGE"}),
+				    #"Changed Type3" = Table.TransformColumnTypes(#"Replaced Value5",{{"ALL_OXBRIDGE", Percentage.Type}}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Changed Type3",{{"ALL_HE", "Higher Education"}, {"ALL_RUSSELL", "Russell Group University"}, {"ALL_OXBRIDGE", "Oxford or Cambridge"}, {"ALL_PROGRESSED", "All Progressions"}})
+				in
+				    #"Renamed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

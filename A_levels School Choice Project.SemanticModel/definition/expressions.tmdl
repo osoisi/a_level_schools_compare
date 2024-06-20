@@ -1,0 +1,174 @@
+expression AdmissionPolicyExtended =
+		let
+		    Source = Sql.Databases("localhost\SQLEXPRESS"),
+		    a_levels_study_db = Source{[Name="a_levels_study_db"]}[Data],
+		    dbo_dimAdmissionPolicytest = a_levels_study_db{[Schema="dbo",Item="dimAdmissionPolicytest"]}[Data],
+		    #"Merged Queries" = Table.NestedJoin(dbo_dimAdmissionPolicytest, {"ADMPOL"}, AdmissionPolicy, {"Policy Name"}, "AdmissionPolicy", JoinKind.LeftOuter),
+		    #"Expanded AdmissionPolicy" = Table.ExpandTableColumn(#"Merged Queries", "AdmissionPolicy", {"Index"}, {"Index"})
+		in
+		    #"Expanded AdmissionPolicy"
+	lineageTag: 1f79f18f-1d08-47f4-9cd9-b44bf0bafaaa
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression dimAdmissionPolicytest =
+		let
+		    Source = Sql.Databases("localhost\SQLEXPRESS"),
+		    a_levels_study_db = Source{[Name="a_levels_study_db"]}[Data],
+		    dbo_dimAdmissionPolicytest = a_levels_study_db{[Schema="dbo",Item="dimAdmissionPolicytest"]}[Data]
+		in
+		    dbo_dimAdmissionPolicytest
+	lineageTag: b5e985a1-9b75-4307-a941-dfc465e82327
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression dimCharterBody =
+		let
+		    Source = Sql.Databases("localhost\SQLEXPRESS"),
+		    a_levels_study_db = Source{[Name="a_levels_study_db"]}[Data],
+		    dbo_dimCharterBody = a_levels_study_db{[Schema="dbo",Item="dimCharterBody"]}[Data]
+		in
+		    dbo_dimCharterBody
+	lineageTag: a2667a5b-7071-46cb-88df-f42d2ecc42f3
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression dimSchoolTypes =
+		let
+		    Source = Sql.Databases("localhost\SQLEXPRESS"),
+		    a_levels_study_db = Source{[Name="a_levels_study_db"]}[Data],
+		    dbo_dimSchoolTypes = a_levels_study_db{[Schema="dbo",Item="dimSchoolTypes"]}[Data],
+		    #"Merged Queries" = Table.NestedJoin(dbo_dimSchoolTypes, {"SCHOOLTYPE"}, #"School Type", {"School Type"}, "School Type", JoinKind.LeftOuter),
+		    #"Expanded School Type" = Table.ExpandTableColumn(#"Merged Queries", "School Type", {"Type ID"}, {"Type ID"})
+		in
+		    #"Expanded School Type"
+	lineageTag: 76046b8d-8f4f-4a79-b555-5e80497d3961
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression factSchoolInspections =
+		let
+		    Source = Sql.Databases("localhost\SQLEXPRESS"),
+		    a_levels_study_db = Source{[Name="a_levels_study_db"]}[Data],
+		    dbo_factSchoolInspections = a_levels_study_db{[Schema="dbo",Item="factSchoolInspections"]}[Data],
+		    #"Merged Queries" = Table.NestedJoin(dbo_factSchoolInspections, {"URN"}, AdmissionPolicyExtended, {"URN"}, "AdmissionPolicyExtended", JoinKind.LeftOuter),
+		    #"Expanded AdmissionPolicyExtended" = Table.ExpandTableColumn(#"Merged Queries", "AdmissionPolicyExtended", {"Index"}, {"Index"}),
+		    #"Renamed Columns" = Table.RenameColumns(#"Expanded AdmissionPolicyExtended",{{"Index", "Admission Policy ID"}}),
+		    #"Merged Queries1" = Table.NestedJoin(#"Renamed Columns", {"URN"}, dimCharterBody, {"URN"}, "dimCharterBody", JoinKind.LeftOuter),
+		    #"Expanded dimCharterBody" = Table.ExpandTableColumn(#"Merged Queries1", "dimCharterBody", {"BodyID"}, {"BodyID"}),
+		    #"Renamed Columns1" = Table.RenameColumns(#"Expanded dimCharterBody",{{"BodyID", "Relchar ID"}}),
+		    #"Replaced Value" = Table.ReplaceValue(#"Renamed Columns1",null,3,Replacer.ReplaceValue,{"Admission Policy ID"}),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Replaced Value",{{"OFSTEDLASTINSP", type date}}),
+		    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"SCHNAME", "TOWN", "POSTCODE"})
+		in
+		    #"Removed Columns"
+	lineageTag: cb9da2fc-ca0d-40e4-8ff9-5914ea666095
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression Locations =
+		let
+		    Source = Sql.Databases("localhost\SQLEXPRESS"),
+		    a_levels_study_db = Source{[Name="a_levels_study_db"]}[Data],
+		    dbo_factSchoolInspections = a_levels_study_db{[Schema="dbo",Item="factSchoolInspections"]}[Data],
+		    #"Merged Queries" = Table.NestedJoin(dbo_factSchoolInspections, {"URN"}, AdmissionPolicyExtended, {"URN"}, "AdmissionPolicyExtended", JoinKind.LeftOuter),
+		    #"Expanded AdmissionPolicyExtended" = Table.ExpandTableColumn(#"Merged Queries", "AdmissionPolicyExtended", {"Index"}, {"Index"}),
+		    #"Renamed Columns" = Table.RenameColumns(#"Expanded AdmissionPolicyExtended",{{"Index", "Admission Policy ID"}}),
+		    #"Merged Queries1" = Table.NestedJoin(#"Renamed Columns", {"URN"}, dimCharterBody, {"URN"}, "dimCharterBody", JoinKind.LeftOuter),
+		    #"Expanded dimCharterBody" = Table.ExpandTableColumn(#"Merged Queries1", "dimCharterBody", {"BodyID"}, {"BodyID"}),
+		    #"Renamed Columns1" = Table.RenameColumns(#"Expanded dimCharterBody",{{"BodyID", "Relchar ID"}}),
+		    #"Replaced Value" = Table.ReplaceValue(#"Renamed Columns1",null,3,Replacer.ReplaceValue,{"Admission Policy ID"}),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Replaced Value",{{"OFSTEDLASTINSP", type date}}),
+		    #"Removed Other Columns" = Table.SelectColumns(#"Changed Type",{"LocationCode", "SCHNAME", "TOWN", "POSTCODE"})
+		in
+		    #"Removed Other Columns"
+	lineageTag: fd001017-2180-4f80-8ea1-6565ff635492
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'Schools for Manual Location Checks csv' =
+		let
+		    Source = Csv.Document(File.Contents("C:\Users\aa1\Desktop\data_repo\a_levels_schools\a_level_schools_compare\Schools for Manual Location Checks.csv.csv"),[Delimiter=",", Columns=6, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+		    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}, {"Column2", type text}, {"Column3", type text}, {"Column4", type text}, {"Column5", type text}, {"Column6", type text}}),
+		    #"Promoted Headers" = Table.PromoteHeaders(#"Changed Type", [PromoteAllScalars=true]),
+		    #"Changed Type1" = Table.TransformColumnTypes(#"Promoted Headers",{{"SCHNAME", type text}, {"Region", type text}, {"School County", type text}, {"School District", type text}, {"School Ward", type text}, {"Postcode", type text}}),
+		    #"Replaced Value" = Table.ReplaceValue(#"Changed Type1","North West","North West, England",Replacer.ReplaceText,{"Region"}),
+		    #"Reordered Columns" = Table.ReorderColumns(#"Replaced Value",{"Postcode", "SCHNAME", "Region", "School County", "School District", "School Ward"}),
+		    #"Removed Other Columns" = Table.SelectColumns(#"Reordered Columns",{"Postcode", "Region", "School County", "School District", "School Ward"})
+		in
+		    #"Removed Other Columns"
+	lineageTag: 86dae669-9206-450a-9007-8468daf97880
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
+expression 'Start Date' = #date(2016, 1, 1) meta [IsParameterQuery=true, Type="Date", IsParameterQueryRequired=true]
+	lineageTag: 0882851a-cc4b-4db3-8e79-7b1f5eb5aecc
+	queryGroup: TestFunction
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Date
+
+expression 'End Date' = #date(2023, 12, 1) meta [IsParameterQuery=true, Type="Date", IsParameterQueryRequired=true]
+	lineageTag: 02bbfd6b-4291-4997-bb4b-35444d5a65e8
+	queryGroup: TestFunction
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Date
+
+expression TestFunction =
+		let
+		    Source = (#"Start Date" as date, #"End Date" as date) => let
+		    Source = Sql.Databases("localhost\SQLEXPRESS"),
+		    a_levels_study_db = Source{[Name="a_levels_study_db"]}[Data],
+		    dbo_factSchoolInspections = a_levels_study_db{[Schema="dbo",Item="factSchoolInspections"]}[Data],
+		    #"Merged Queries" = Table.NestedJoin(dbo_factSchoolInspections, {"URN"}, AdmissionPolicyExtended, {"URN"}, "AdmissionPolicyExtended", JoinKind.LeftOuter),
+		    #"Expanded AdmissionPolicyExtended" = Table.ExpandTableColumn(#"Merged Queries", "AdmissionPolicyExtended", {"Index"}, {"Index"}),
+		    #"Renamed Columns" = Table.RenameColumns(#"Expanded AdmissionPolicyExtended",{{"Index", "Admission Policy ID"}}),
+		    #"Merged Queries1" = Table.NestedJoin(#"Renamed Columns", {"URN"}, dimCharterBody, {"URN"}, "dimCharterBody", JoinKind.LeftOuter),
+		    #"Expanded dimCharterBody" = Table.ExpandTableColumn(#"Merged Queries1", "dimCharterBody", {"BodyID"}, {"BodyID"}),
+		    #"Renamed Columns1" = Table.RenameColumns(#"Expanded dimCharterBody",{{"BodyID", "Relchar ID"}}),
+		    #"Replaced Value" = Table.ReplaceValue(#"Renamed Columns1",null,3,Replacer.ReplaceValue,{"Admission Policy ID"}),
+		    #"Changed Type" = Table.TransformColumnTypes(#"Replaced Value",{{"OFSTEDLASTINSP", type date}}),
+		    #"Merged Queries2" = Table.NestedJoin(#"Changed Type", {"URN"}, dimSchoolTypes, {"URN"}, "dimSchoolTypes", JoinKind.LeftOuter),
+		    #"Expanded dimSchoolTypes" = Table.ExpandTableColumn(#"Merged Queries2", "dimSchoolTypes", {"Type ID"}, {"Type ID"}),
+		    #"Renamed Columns2" = Table.RenameColumns(#"Expanded dimSchoolTypes",{{"Type ID", "School Type ID"}}),
+		    #"Changed Type1" = Table.TransformColumnTypes(#"Renamed Columns2",{{"Admission Policy ID", Int64.Type}}),
+		    #"Renamed Columns3" = Table.RenameColumns(#"Changed Type1",{{"OFSTEDRATING", "OFSTED Rating"}, {"OFSTEDLASTINSP", "OFSTED Inspection"}, {"Relchar ID", "Association ID"}, {"POSTCODE", "Postcode"}, {"LocationCode", "Location ID"}}),
+		    #"Added Conditional Column" = Table.AddColumn(#"Renamed Columns3", "Custom", each if [OFSTED Rating] = "Good" then 80 else if [OFSTED Rating] = "Outstanding" then 100 else if [OFSTED Rating] = "Requires improvement" then 60 else if [OFSTED Rating] = "Inadequate" then 40 else if [OFSTED Rating] = "Serious Weakness" then 20 else if [OFSTED Rating] = "Special Measures" then 10 else if [OFSTED Rating] = "Insufficient evidence" then 0 else if [OFSTED Rating] = "Serious Weaknesses" then 5 else null),
+		    #"Reordered Columns" = Table.ReorderColumns(#"Added Conditional Column",{"URN", "Location ID", "Postcode", "OFSTED Rating", "Custom", "OFSTED Inspection", "Admission Policy ID", "Association ID", "School Type ID"}),
+		    #"Renamed Columns4" = Table.RenameColumns(#"Reordered Columns",{{"Custom", "Rating Grade"}}),
+		    #"Removed Other Columns" = Table.SelectColumns(#"Renamed Columns4",{"URN", "Location ID", "SCHNAME", "Postcode", "OFSTED Rating", "Rating Grade", "OFSTED Inspection", "Admission Policy ID", "Association ID", "School Type ID"}),
+		    #"Merged Queries3" = Table.NestedJoin(#"Removed Other Columns", {"OFSTED Rating"}, #"OFSTED Rating", {"Rating"}, "OFSTED Rating.1", JoinKind.LeftOuter),
+		    #"Expanded OFSTED Rating.1" = Table.ExpandTableColumn(#"Merged Queries3", "OFSTED Rating.1", {"Index", "Rating"}, {"Index", "Rating"}),
+		    #"Renamed Columns5" = Table.RenameColumns(#"Expanded OFSTED Rating.1",{{"Index", "OFSTED Grade ID"}}),
+		    #"Removed Other Columns1" = Table.SelectColumns(#"Renamed Columns5",{"URN", "Location ID", "SCHNAME", "Postcode", "OFSTED Inspection", "Admission Policy ID", "Association ID", "School Type ID", "OFSTED Grade ID", "Rating"}),
+		    #"Reordered Columns1" = Table.ReorderColumns(#"Removed Other Columns1",{"URN", "Location ID", "SCHNAME", "Postcode", "OFSTED Grade ID", "Rating", "OFSTED Inspection", "Admission Policy ID", "Association ID", "School Type ID"}),
+		    #"Filtered Rows" = Table.SelectRows(#"Reordered Columns1", each [OFSTED Inspection] >= #"Start Date" and [OFSTED Inspection] <= #"End Date")
+		    in
+		        #"Filtered Rows"
+		in
+		    Source
+	mAttributes: [ FunctionQueryBinding = "{""exemplarFormulaName"":""School Inspections""}" ]
+	lineageTag: 5247403c-2424-4cf3-9ea4-0d8c31e18eae
+	queryGroup: TestFunction
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Function
+

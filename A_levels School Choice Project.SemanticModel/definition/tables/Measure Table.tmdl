@@ -1,0 +1,116 @@
+table 'Measure Table'
+	lineageTag: e5f2d4a1-c27b-429f-a92d-2ea26f2afedd
+
+	measure 'School Count' = CALCULATE(COUNT('School Inspections'[URN]))
+		formatString: 0
+		lineageTag: a57663c2-4c5d-47f2-affc-cb816c0ad779
+
+	measure 'Region Selection' =
+			CONCATENATEX(
+			    VALUES('England postcodes'[School Region]),'England postcodes'[School Region],",")
+		lineageTag: 8480a8c6-5723-4b50-b209-8604d27e2499
+
+	measure 'Dynamic Title' = ```
+			
+			VAR _RatingCount = DISTINCTCOUNT('OFSTED Rating'[Rating])
+			VAR _MaxRatingToShow = 3
+			VAR _PolicyCount = DISTINCTCOUNT('AdmissionPolicy'[Policy Name])
+			VAR _MaxPolicyToShow = 3
+			VAR _AssociationsCount = DISTINCTCOUNT(Associations[Association])
+			VAR _MaxAssociationsToShow = 3
+			
+			VAR _RatingList = 
+			    IF(
+			        _RatingCount > _MaxRatingToShow,
+			        CONCATENATEX(
+			            TOPN(
+			                _MaxRatingToShow,
+			                VALUES('OFSTED Rating'[Rating]),
+			                'OFSTED Rating'[Rating],
+			                ASC
+			            ),
+			            'OFSTED Rating'[Rating],
+			            ", "
+			        ) & " etc.",
+			        CONCATENATEX(
+			            VALUES('OFSTED Rating'[Rating]),
+			            'OFSTED Rating'[Rating],
+			            ", "
+			        )
+			    )
+			
+			VAR _PolicyList = 
+			    IF(
+			        _PolicyCount > _MaxPolicyToShow,
+			        CONCATENATEX(
+			            TOPN(
+			                _MaxPolicyToShow,
+			                VALUES('AdmissionPolicy'[Policy Name]),
+			                'AdmissionPolicy'[Policy Name],
+			                ASC
+			            ),
+			            'AdmissionPolicy'[Policy Name],
+			            ", "
+			        ) & " etc.",
+			        CONCATENATEX(
+			            VALUES('AdmissionPolicy'[Policy Name]),
+			            'AdmissionPolicy'[Policy Name],
+			            ", "
+			        )
+			    )
+			
+			VAR _AdmissionsList =
+			    IF(
+			        _AssociationsCount > _MaxAssociationsToShow,
+			        CONCATENATEX(
+			            TOPN(
+			                _MaxAssociationsToShow,
+			                VALUES(Associations[Association]),
+			                Associations[Association],
+			                ASC
+			            ),
+			            Associations[Association],
+			            ", "
+			        ) & " etc.",
+			        CONCATENATEX(
+			            VALUES(Associations[Association]),
+			            Associations[Association],
+			            ", "
+			        )
+			    )
+			
+			VAR _IsRatingSelected = (ISBLANK(_RatingList))
+			VAR _IsPolicySelected = (ISBLANK(_PolicyList))
+			VAR _IsAssociationsSelected = (ISBLANK(_AdmissionsList))
+			
+			VAR Title = 
+			   IF(
+			        _IsRatingSelected || _IsPolicySelected || _IsAssociationsSelected, 
+			        "A-Levels School's Map Across Britain",
+			        "Map Showing Ratings: " & _RatingList & " and Policies: " & _PolicyList & " and Associations: " & _AdmissionsList
+			    )
+			
+			RETURN
+			Title
+			
+			```
+		lineageTag: 9c9e4704-bdd0-468f-9efc-c0ce8370bf7c
+
+	measure OustandingSchools = CALCULATE(COUNTX('OFSTED Rating','OFSTED Rating'[Rating]="Outstanding")/[School Count]('School Inspections','School Inspections'[SCHNAME]))
+		formatString: 0%;-0%;0%
+		lineageTag: ba17eca6-dee4-4c9a-b01c-06065f088afa
+
+	partition 'Measure Table' = m
+		mode: import
+		source =
+				let
+				    Source = Table.FromRows(Json.Document(Binary.Decompress(Binary.FromText("i44FAA==", BinaryEncoding.Base64), Compression.Deflate)), let _t = ((type nullable text) meta [Serialized.Text = true]) in type table [Column1 = _t]),
+				    #"Changed Type" = Table.TransformColumnTypes(Source,{{"Column1", type text}}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Changed Type",{"Column1"})
+				in
+				    #"Removed Columns"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

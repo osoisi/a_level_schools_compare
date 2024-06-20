@@ -1,0 +1,33 @@
+table Date
+	lineageTag: 47ff1b78-6e2b-4adc-8181-f28b8a6c57c3
+	dataCategory: Time
+
+	column Date
+		dataType: dateTime
+		isKey
+		formatString: Long Date
+		lineageTag: 94f44e83-1158-4a23-9b07-99acbac25dfc
+		summarizeBy: none
+		isNameInferred
+		isDataTypeInferred
+		sourceColumn: [Date]
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation UnderlyingDateTimeDataType = Date
+
+	column YEAR = YEAR('Date'[Date])
+		dataType: int64
+		formatString: 0
+		lineageTag: 7646a338-18ce-46db-ba8a-1e829a3f0d13
+		summarizeBy: none
+		isDataTypeInferred
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Date = calculated
+		mode: import
+		source = CALENDAR(min('School Inspections'[OFSTED Inspection]),max('School Inspections'[OFSTED Inspection]))
+
+	annotation PBI_Id = bc07f61b0e3a4f03b11b0d7c8363e77f
+

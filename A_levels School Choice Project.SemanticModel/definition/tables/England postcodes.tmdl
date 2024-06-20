@@ -1,0 +1,177 @@
+table 'England postcodes'
+	lineageTag: 517392ec-4b67-4ef6-9e5e-8ed2e3674c1f
+
+	column Postcode
+		dataType: string
+		isHidden
+		lineageTag: 84b3044e-af76-4f68-9690-a35cfdc1ff21
+		dataCategory: PostalCode
+		summarizeBy: none
+		sourceColumn: Postcode
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'In Use?'
+		dataType: string
+		isHidden
+		lineageTag: 7c8ccb0b-e9dc-460a-8fb1-0cea9e315ae9
+		summarizeBy: none
+		sourceColumn: In Use?
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Latitude
+		dataType: double
+		lineageTag: 6041b364-e390-4cc7-ace3-585a22bd6e0f
+		dataCategory: Latitude
+		summarizeBy: none
+		sourceColumn: Latitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Longitude
+		dataType: double
+		lineageTag: f4c1003d-72b0-4846-8ada-615b815114d4
+		dataCategory: Longitude
+		summarizeBy: none
+		sourceColumn: Longitude
+
+		annotation SummarizationSetBy = Automatic
+
+		annotation PBI_FormatHint = {"isGeneralNumber":true}
+
+	column Rural/urban
+		dataType: string
+		lineageTag: 4b7437d8-63e7-4891-9f95-07581132530f
+		summarizeBy: none
+		sourceColumn: Rural/urban
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'Average Income'
+		dataType: int64
+		formatString: 0
+		lineageTag: 7d585247-4cad-48c0-9c5b-5915d12d4bf7
+		summarizeBy: none
+		sourceColumn: Average Income
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'School Ward'
+		dataType: string
+		isHidden
+		lineageTag: 377ba837-960e-4da0-bd01-78d4e9bcc44e
+		dataCategory: Place
+		summarizeBy: none
+		sourceColumn: School Ward
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'School District'
+		dataType: string
+		isHidden
+		lineageTag: 15c67f4a-a832-454e-ba9a-7a4835e7c51b
+		dataCategory: Place
+		summarizeBy: none
+		sourceColumn: School District
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'School County'
+		dataType: string
+		isHidden
+		lineageTag: 95aa2e71-dc54-4867-817b-ff71eb832e7c
+		dataCategory: Place
+		summarizeBy: none
+		sourceColumn: School County
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column 'School Region'
+		dataType: string
+		lineageTag: b95d0cba-f6ce-47dc-8dee-288c74c64d6b
+		dataCategory: Place
+		summarizeBy: none
+		sourceColumn: School Region
+
+		annotation SummarizationSetBy = Automatic
+
+	hierarchy 'Region Hierarchy'
+		lineageTag: 53664bea-9a5d-41dc-b595-de6a0d23c400
+
+		level 'School County'
+			lineageTag: 03c4a56a-2bb4-4eba-9118-8dd451208428
+			column: 'School County'
+
+		level 'School District'
+			lineageTag: 41161dfd-c981-4997-864d-5ee7f5b7ae26
+			column: 'School District'
+
+		level 'School Ward'
+			lineageTag: 6d3d3db4-3ba5-4a82-a5a4-50139beae229
+			column: 'School Ward'
+
+		level Postcode
+			lineageTag: daba96eb-bd3a-4925-8c09-f220cb5c5975
+			column: Postcode
+
+	partition 'England postcodes' = m
+		mode: import
+		source =
+				let
+				    Source = Csv.Document(File.Contents("C:\Users\aa1\Desktop\data_repo\a_levels_schools\a_level_schools_compare\England postcodes.csv"),[Delimiter=",", Columns=58, Encoding=1252, QuoteStyle=QuoteStyle.None]),
+				    #"Promoted Headers" = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),
+				    #"Changed Type" = Table.TransformColumnTypes(#"Promoted Headers",{{"Postcode", type text}, {"In Use?", type text}, {"Latitude", type number}, {"Longitude", type number}, {"Easting", Int64.Type}, {"Northing", Int64.Type}, {"Grid Ref", type text}, {"County", type text}, {"District", type text}, {"Ward", type text}, {"District Code", type text}, {"Ward Code", type text}, {"Country", type text}, {"County Code", type text}, {"Constituency", type text}, {"Introduced", type date}, {"Terminated", type date}, {"Parish", type text}, {"National Park", type text}, {"Population", Int64.Type}, {"Households", Int64.Type}, {"Built up area", type text}, {"Built up sub-division", type text}, {"Lower layer super output area", type text}, {"Rural/urban", type text}, {"Region", type text}, {"Altitude", Int64.Type}, {"London zone", type text}, {"LSOA Code", type text}, {"Local authority", type text}, {"MSOA Code", type text}, {"Middle layer super output area", type text}, {"Parish Code", type text}, {"Census output area", type text}, {"Constituency Code", type text}, {"Index of Multiple Deprivation", Int64.Type}, {"Quality", Int64.Type}, {"User Type", Int64.Type}, {"Last updated", type date}, {"Nearest station", type text}, {"Distance to station", type number}, {"Postcode area", type text}, {"Postcode district", type text}, {"Police force", type text}, {"Water company", type text}, {"Plus Code", type text}, {"Average Income", Int64.Type}, {"Sewage Company", type text}, {"Travel To Work Area", type text}, {"ITL level 2", type text}, {"ITL level 3", type text}, {"Distance to sea", type number}, {"LSOA21 Code", type text}, {"Lower layer super output area 2021", type text}, {"MSOA21 Code", type text}, {"Middle layer super output area 2021", type text}, {"Census output area 2021", type text}, {"IMD decile", Int64.Type}}),
+				    #"Filtered Rows" = Table.SelectRows(#"Changed Type", each ([#"In Use?"] = "Yes")),
+				    #"Removed Columns" = Table.RemoveColumns(#"Filtered Rows",{"Terminated", "Parish", "National Park", "Built up area", "Built up sub-division", "Lower layer super output area", "London zone", "LSOA Code", "Altitude", "MSOA Code", "Middle layer super output area", "Parish Code", "Census output area", "Constituency Code", "Index of Multiple Deprivation", "Quality", "User Type", "Last updated", "Nearest station", "Distance to station", "Postcode area", "Postcode district", "Police force", "Water company", "Plus Code", "Sewage Company", "Travel To Work Area", "ITL level 2", "ITL level 3", "Distance to sea", "LSOA21 Code", "Lower layer super output area 2021", "MSOA21 Code", "Middle layer super output area 2021", "Census output area 2021", "IMD decile", "Population", "Households", "Introduced", "County Code", "District Code", "Ward Code", "Easting", "Northing", "Grid Ref"}),
+				    #"Duplicated Column" = Table.DuplicateColumn(#"Removed Columns", "Country", "Country - Copy"),
+				    #"Reordered Columns" = Table.ReorderColumns(#"Duplicated Column",{"Postcode", "In Use?", "Latitude", "Longitude", "County", "District", "Constituency", "Ward", "Country", "Country - Copy", "Rural/urban", "Region", "Local authority", "Average Income"}),
+				    #"Removed Columns1" = Table.RemoveColumns(#"Reordered Columns",{"Constituency"}),
+				    #"Reordered Columns1" = Table.ReorderColumns(#"Removed Columns1",{"Postcode", "In Use?", "Latitude", "Longitude", "Ward", "District", "County", "Country", "Country - Copy", "Rural/urban", "Region", "Local authority", "Average Income"}),
+				    #"Duplicated Column1" = Table.DuplicateColumn(#"Reordered Columns1", "County", "County - Copy"),
+				    #"Duplicated Column2" = Table.DuplicateColumn(#"Duplicated Column1", "Country - Copy", "Country - Copy - Copy"),
+				    #"Reordered Columns4" = Table.ReorderColumns(#"Duplicated Column2",{"Postcode", "In Use?", "Latitude", "Longitude", "Ward", "District", "County", "Country", "Country - Copy", "Country - Copy - Copy", "Rural/urban", "Region", "Local authority", "Average Income", "County - Copy"}),
+				    #"Reordered Columns2" = Table.ReorderColumns(#"Reordered Columns4",{"Postcode", "In Use?", "Latitude", "Longitude", "Ward", "District", "County", "Country", "County - Copy", "Local authority", "Country - Copy", "Rural/urban", "Region", "Average Income"}),
+				    #"Removed Columns2" = Table.RemoveColumns(#"Reordered Columns2",{"Local authority"}),
+				    #"Reordered Columns3" = Table.ReorderColumns(#"Removed Columns2",{"Postcode", "In Use?", "Latitude", "Longitude", "Ward", "District", "County", "Country", "County - Copy", "Country - Copy", "Region", "Rural/urban", "Average Income"}),
+				    #"Merged Columns" = Table.CombineColumns(#"Reordered Columns3",{"District", "County", "Country"},Combiner.CombineTextByDelimiter(",", QuoteStyle.None),"School District"),
+				    #"Merged Columns1" = Table.CombineColumns(#"Merged Columns",{"County - Copy", "Country - Copy"},Combiner.CombineTextByDelimiter(",", QuoteStyle.None),"School Country"),
+				    #"Reordered Columns5" = Table.ReorderColumns(#"Merged Columns1",{"Postcode", "In Use?", "Latitude", "Longitude", "Ward", "Country - Copy - Copy", "School District", "School Country", "Region", "Rural/urban", "Average Income"}),
+				    #"Removed Columns3" = Table.RemoveColumns(#"Reordered Columns5",{"Country - Copy - Copy"}),
+				    #"Duplicated Column3" = Table.DuplicateColumn(#"Removed Columns3", "School Country", "School Country - Copy"),
+				    #"Reordered Columns6" = Table.ReorderColumns(#"Duplicated Column3",{"Postcode", "In Use?", "Latitude", "Longitude", "Ward", "School Country - Copy", "School District", "School Country", "Region", "Rural/urban", "Average Income"}),
+				    #"Merged Columns2" = Table.CombineColumns(#"Reordered Columns6",{"Ward", "School Country - Copy"},Combiner.CombineTextByDelimiter(",", QuoteStyle.None),"School Ward"),
+				    #"Renamed Columns" = Table.RenameColumns(#"Merged Columns2",{{"School Country", "School County"}}),
+				    #"Replaced Value" = Table.ReplaceValue(#"Renamed Columns","East Midlands","East Midlands, England",Replacer.ReplaceText,{"Region"}),
+				    #"Replaced Value1" = Table.ReplaceValue(#"Replaced Value","London","London, England",Replacer.ReplaceText,{"Region"}),
+				    #"Replaced Value2" = Table.ReplaceValue(#"Replaced Value1","North East","North East, England",Replacer.ReplaceText,{"Region"}),
+				    #"Replaced Value3" = Table.ReplaceValue(#"Replaced Value2","North West","North West, England",Replacer.ReplaceText,{"Region"}),
+				    #"Replaced Value4" = Table.ReplaceValue(#"Replaced Value3","South East","South East, England",Replacer.ReplaceText,{"Region"}),
+				    #"Replaced Value5" = Table.ReplaceValue(#"Replaced Value4","South West","South West, England",Replacer.ReplaceText,{"Region"}),
+				    #"Replaced Value6" = Table.ReplaceValue(#"Replaced Value5","West Midlands","West Midlands, England",Replacer.ReplaceText,{"Region"}),
+				    #"Replaced Value7" = Table.ReplaceValue(#"Replaced Value6","Yorkshire and The Humber","Yorkshire and The Humber, England",Replacer.ReplaceText,{"Region"}),
+				    #"Appended Query" = Table.Combine({#"Replaced Value7", #"Schools for Manual Location Checks csv"}),
+				    #"Removed Duplicates" = Table.Distinct(#"Appended Query", {"Postcode"}),
+				    #"Added Conditional Column" = Table.AddColumn(#"Removed Duplicates", "Custom", each if Text.Contains([Region], "East Midlands") then "East Midlands, England" else if Text.Contains([Region], "London") then "London, England" else if Text.Contains([Region], "North East") then "North, East England" else if Text.Contains([Region], "North West") then "North West, England" else if Text.Contains([Region], "South East") then "South East, England" else if Text.Contains([Region], "South West") then "South West, England" else if Text.Contains([Region], "West Midlands") then "West Midlands, England" else if Text.Contains([Region], "East of England") then "East of England" else if Text.Contains([Region], "Yorkshire and the Humber") then "Yorkshire and the Humber, England" else if Text.Contains([Region], "Yorkshire") then "Yorkshire and the Humber, England" else null),
+				    #"Removed Other Columns" = Table.SelectColumns(#"Added Conditional Column",{"Postcode", "In Use?", "Latitude", "Longitude", "School Ward", "School District", "School County", "Rural/urban", "Average Income", "Custom"}),
+				    #"Renamed Columns1" = Table.RenameColumns(#"Removed Other Columns",{{"Custom", "School Region"}}),
+				    #"Reordered Columns7" = Table.ReorderColumns(#"Renamed Columns1",{"Postcode", "In Use?", "Latitude", "Longitude", "School Ward", "School District", "School County", "School Region", "Rural/urban", "Average Income"})
+				in
+				    #"Reordered Columns7"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+

@@ -1,0 +1,30 @@
+relationship 412843a9-b255-41b4-b7a7-f64aec85d23b
+	fromColumn: 'School Inspections'.Postcode
+	toColumn: 'England postcodes'.Postcode
+
+relationship 53b99127-8b72-41fa-b990-efaa0cbad9da
+	fromColumn: 'School Inspections'.'Association ID'
+	toColumn: Associations.'Association ID'
+
+relationship 99fee63a-9873-42a0-9e3a-75224b4bceac
+	crossFilteringBehavior: bothDirections
+	fromCardinality: one
+	fromColumn: Progressions.URN
+	toColumn: 'School Inspections'.URN
+
+relationship 00b37d69-f067-459e-b6f7-019c1cbc3283
+	fromColumn: 'School Inspections'.'School Type ID'
+	toColumn: 'School Type'.'Type ID'
+
+relationship 8f6e2722-3e1e-4710-8314-4965f4e7f40c
+	fromColumn: 'School Inspections'.'Admission Policy ID'
+	toColumn: AdmissionPolicy.Index
+
+relationship 45c0b56a-3af8-4bb4-8f82-7f73cc4e47ec
+	fromColumn: 'School Inspections'.'OFSTED Inspection'
+	toColumn: Date.Date
+
+relationship 9a2d5de9-47e9-488d-a9dd-d17392f10e6e
+	fromColumn: 'School Inspections'.'OFSTED Grade ID'
+	toColumn: 'OFSTED Rating'.Index
+

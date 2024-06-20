@@ -1,0 +1,41 @@
+table Associations
+	lineageTag: 100142bb-6a08-4ee3-a31b-8bde00b75cc6
+
+	column 'Association ID'
+		dataType: int64
+		isHidden
+		formatString: 0
+		lineageTag: 4952424b-271e-4176-9a7f-4f820dd183e2
+		summarizeBy: none
+		sourceColumn: Association ID
+
+		changedProperty = IsHidden
+
+		annotation SummarizationSetBy = Automatic
+
+	column Association
+		dataType: string
+		lineageTag: 1e665d4f-dff9-4e3a-8dc2-b3fce59beb3b
+		summarizeBy: none
+		sourceColumn: Association
+
+		annotation SummarizationSetBy = Automatic
+
+	partition Associations = m
+		mode: import
+		source =
+				let
+				    Source = Sql.Databases("localhost\SQLEXPRESS"),
+				    a_levels_study_db = Source{[Name="a_levels_study_db"]}[Data],
+				    dbo_dimCharterBody = a_levels_study_db{[Schema="dbo",Item="dimCharterBody"]}[Data],
+				    #"Removed Duplicates" = Table.Distinct(dbo_dimCharterBody, {"BodyID"}),
+				    #"Removed Columns" = Table.RemoveColumns(#"Removed Duplicates",{"URN", "RELCHAR", "RelCharGroup"}),
+				    #"Renamed Columns" = Table.RenameColumns(#"Removed Columns",{{"BodyID", "Association ID"}, {"CharterBody", "Association"}}),
+				    #"Sorted Rows" = Table.Sort(#"Renamed Columns",{{"Association ID", Order.Ascending}})
+				in
+				    #"Sorted Rows"
+
+	annotation PBI_NavigationStepName = Navigation
+
+	annotation PBI_ResultType = Table
+
